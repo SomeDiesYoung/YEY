@@ -13,3 +13,18 @@ public static class EventStatusHandler
         return existingEvent;
     }
 }
+
+//public enum EventStatus
+//{
+//    Active,
+//    Postponed,
+//    Completed,
+//    Cancelled
+//}
+
+public interface IEventStatusState
+{
+    EventStatus GetNextState();
+}
+
+

@@ -6,6 +6,9 @@ namespace EventManager.Service.Commands;
 
 public abstract class EventCommand
 {
+    /// <summary>
+    /// Event Id
+    /// </summary>
     public int EventId { get; set; }
     public required string Name { get; set; }
     public required string Description { get; set; }

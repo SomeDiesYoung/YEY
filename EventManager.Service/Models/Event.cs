@@ -1,4 +1,7 @@
-﻿namespace EventManager.Service.Models;
+﻿using EventManager.Service.Exceptions;
+using EventManager.Service.Validations;
+
+namespace EventManager.Service.Models;
 
 public class Event
 {
@@ -10,4 +13,16 @@ public class Event
     public TimeSpan Duration { get; set; } 
     public required string Location { get; set; }
     public EventStatus Status { get; set; } = EventStatus.Active;
+
+    public void Activate()
+    {
+        Status.EnsureNotCancelled();
+        Status.EnsureNotCompleted();
+
+        Status = EventStatus.Active;
+    }
+    public void Postpone() {
+    }
+
 }
+

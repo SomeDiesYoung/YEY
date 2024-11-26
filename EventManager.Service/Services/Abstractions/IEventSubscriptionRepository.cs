@@ -11,4 +11,5 @@ public interface IEventSubscriptionRepository
     EventSubscription? GetSubscriptionByUserIdAndEventId(int userId, int eventId);
     void AddSubscription(EventSubscription Subscription);
     void RemoveSubscription(int userId,int eventId);
+    bool Exists(int eventId, int userId);
 }

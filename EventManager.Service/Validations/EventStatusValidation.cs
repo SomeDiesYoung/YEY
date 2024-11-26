@@ -8,10 +8,8 @@ namespace EventManager.Service.Validations;
 
 public static class EventStatusValidation
 {
-    public static void ValidateEventIsActive(int eventId, IEventRepository eventRepository)
+    public static void EnsureIsActive(this Event? currentEvent)
     {
-        var currentEvent = eventRepository.GetById(eventId);
-
         if (currentEvent == null)
             throw new NotFoundException("Event not found.");
 
@@ -20,5 +18,20 @@ public static class EventStatusValidation
 
         if (currentEvent.EndDate <= DateTime.Now)
             throw new ValidationException("Event has already ended.");
+    }
+
+    public static void EnsureNotCancelled(this EventStatus status)
+    {
+        if (status == EventStatus.Cancelled)
+        {
+            throw new DomainException("Event is cancelled");
+        }
+    }   
+    public static void EnsureNotCompleted(this EventStatus status)
+    {
+        if (status == EventStatus.Cancelled)
+        {
+            throw new DomainException("Event is Completed");
+        }
     }
 }
