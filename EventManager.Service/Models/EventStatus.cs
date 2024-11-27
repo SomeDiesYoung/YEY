@@ -4,6 +4,5 @@ public enum EventStatus
 {
     Active,
     Postponed,  
-    Completed, 
     Cancelled
 }

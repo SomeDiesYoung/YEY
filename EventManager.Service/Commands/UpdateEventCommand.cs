@@ -19,7 +19,7 @@ public class UpdateEventCommand : EventCommand
     }
     public void ValidationForUpdate()
     {
-        if (Status == EventStatus.Completed || Status == EventStatus.Cancelled)
+        if (Status == EventStatus.Cancelled)
         {
             throw new ValidationException("Cannot change status of completed or cancelled events.");
         }

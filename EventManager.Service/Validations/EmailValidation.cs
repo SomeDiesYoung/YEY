@@ -1,9 +1,14 @@
 ﻿using EventManager.Service.Exceptions;
 using System.Net.Mail;
 
+/// <summary>
+/// One of ways to Validate Email Maybe RegEx is more compact, but this is elegant way (for me)
+/// </summary>
+/// 
+namespace EventManager.Service.Validations;
 public static class EmailValidation
 {
-    public static void ValidateEmail(string email)
+    public static void ValidateEmail(this string email)
     {
         if (string.IsNullOrWhiteSpace(email))
         {
@@ -12,7 +17,7 @@ public static class EmailValidation
 
         var trimmedEmail = email.Trim();
 
-        if (trimmedEmail.EndsWith("."))
+        if (trimmedEmail.EndsWith('.'))
         {
             throw new ValidationException("Email can't end with a dot.");
         }

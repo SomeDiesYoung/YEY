@@ -3,8 +3,6 @@ using EventManager.Service.Commands;
 using EventManager.Service.Exceptions;
 using EventManager.Service.Models;
 using EventManager.Service.Services.Abstractions;
-using EventManager.Service.Services.Functions;
-using System.Xml.Linq;
 
 namespace EventManager.Service.Services.Inplementations;
 
@@ -16,7 +14,10 @@ public class EventService
         _eventRepository = eventRepository;
     }
 
-    public void createEvent(CreateEventCommand command)
+     /// <summary>
+     /// Method For Creating New Event (With Validation From Command)
+     /// </summary>
+    public void CreateEvent(CreateEventCommand command)
     {
         command.Validate();
         command.ValidateDateAndDuration();
@@ -35,35 +36,51 @@ public class EventService
         };
         _eventRepository.SaveEvent(newEvent);
     }
-    public void updateEvent(UpdateEventCommand command)
+    /// <summary>
+    /// 
+    /// Updating already existing Event by custom command (with own Validations) and Status Change 
+    /// 
+    /// </summary>
+    /// <param name="command"></param>
+    /// <exception cref="NotFoundException"></exception>
+    /// <exception cref="ValidationException"></exception>
+    /// <exception cref="DomainException"></exception>
+    /// 
+
+    public void UpdateEvent(UpdateEventCommand command)
     {
         command.Validate();
         command.ValidateDateAndDuration();
         command.ValidationForUpdate();
 
-        var EventForUpdate = _eventRepository.GetById(command.EventId);//Teoriashi FirstOrDefault Arrow func sheidzleba
+        var eventForUpdate = _eventRepository.GetById(command.EventId) ?? throw new NotFoundException("Event With this Id is not found");//Teoriashi FirstOrDefault Arrow func sheidzleba
 
-        if (EventForUpdate == null) throw new NotFoundException("Event With this Id is not found");
-        if (EventForUpdate.Status == EventStatus.Cancelled || EventForUpdate.Status== EventStatus.Completed) throw new ValidationException("Event Is Cancelled or Ended");
 
-        EventStatusHandler.changeStatus(EventForUpdate, command.Status ); //Davibeni ...
-        
-        EventForUpdate.Description = command.Description;
-        EventForUpdate.StartDate = command.StartDate;
-        EventForUpdate.EndDate = command.EndDate;
-        EventForUpdate.Location = command.Location;
-        EventForUpdate.Status = command.Status;
+        if (eventForUpdate.Status == EventStatus.Cancelled) throw new ValidationException("Event Is Cancelled or Ended");
 
-        _eventRepository.SaveEvent(EventForUpdate);
+        //EventStatusHandler.ChangeStatus(eventForUpdate, command.Status); //Imena custaruli xerxia axals vaketeb mara mgoni magaze uaresi iqneba
+
+        switch (command.Status)
+        {
+            case EventStatus.Active:
+                eventForUpdate.Activate();
+                break;
+            case EventStatus.Postponed:
+                eventForUpdate.Postpone();
+                break;
+            case EventStatus.Cancelled:
+                eventForUpdate.Cancel();
+                break;
+            default:
+                throw new DomainException("Invalid status");
+        }
+
+
+        eventForUpdate.Description = command.Description;
+        eventForUpdate.StartDate = command.StartDate;
+        eventForUpdate.EndDate = command.EndDate;
+        eventForUpdate.Location = command.Location;
+
+        _eventRepository.SaveEvent(eventForUpdate);
     }
-
-    //public void deleteEvent(DeleteEventCommand command)
-    //{
-    //    command.Validate();
-    //    var EventForDelete = _eventRepository.GetById(command.EventId);
-    //    if (EventForDelete == null) throw new NotFoundException("Event with this Id is not found");
-    //    if(EventForDelete.Status != EventStatus.Active)
-
-    //} 
-    //Tu i 
 }

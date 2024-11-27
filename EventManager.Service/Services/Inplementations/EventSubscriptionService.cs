@@ -1,8 +1,8 @@
 ﻿
-using EventManager.Service.Validations;
 using EventManager.Service.Commands;
-using EventManager.Service.Services.Abstractions;
 using EventManager.Service.Models;
+using EventManager.Service.Services.Abstractions;
+using EventManager.Service.Validations;
 
 namespace EventManager.Service.Services.Inplementations;
 
@@ -19,6 +19,7 @@ public class EventSubscriptionService
 
     public void SubscribeToEvent(EventSubscriptionCommand command)
     {
+        command.Validate();
         var currentEvent = _eventRepository.GetById(command.EventId);
         currentEvent.EnsureIsActive();
 
@@ -34,5 +35,14 @@ public class EventSubscriptionService
 
         _eventSubscriptionRepository.AddSubscription(NewSubscription);
 
+    }
+
+    public void UnSubscribeFromEvent(EventSubscriptionCommand command)
+    {
+        command.Validate();
+        var currentEvent = _eventRepository.GetById(command.EventId);
+        currentEvent.EnsureIsActive();
+
+        _eventSubscriptionRepository.RemoveSubscription(command.UserId, command.EventId);
     }
 }

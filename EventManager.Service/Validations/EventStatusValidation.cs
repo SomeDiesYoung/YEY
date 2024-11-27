@@ -3,6 +3,7 @@
 using EventManager.Service.Exceptions;
 using EventManager.Service.Models;
 using EventManager.Service.Services.Abstractions;
+using System.Diagnostics;
 
 namespace EventManager.Service.Validations;
 
@@ -27,11 +28,4 @@ public static class EventStatusValidation
             throw new DomainException("Event is cancelled");
         }
     }   
-    public static void EnsureNotCompleted(this EventStatus status)
-    {
-        if (status == EventStatus.Cancelled)
-        {
-            throw new DomainException("Event is Completed");
-        }
-    }
 }
