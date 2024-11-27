@@ -2,8 +2,6 @@
 
 using EventManager.Service.Exceptions;
 using EventManager.Service.Models;
-using EventManager.Service.Services.Abstractions;
-using System.Diagnostics;
 
 namespace EventManager.Service.Validations;
 

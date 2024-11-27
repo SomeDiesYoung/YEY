@@ -53,7 +53,7 @@ public class EventService
         command.ValidateDateAndDuration();
         command.ValidationForUpdate();
 
-        var eventForUpdate = _eventRepository.GetById(command.EventId) ?? throw new NotFoundException("Event With this Id is not found");//Teoriashi FirstOrDefault Arrow func sheidzleba
+        var eventForUpdate = _eventRepository.GetById(command.EventId) ?? throw new NotFoundException("Event With this Id is not found");
 
 
         if (eventForUpdate.Status == EventStatus.Cancelled) throw new ValidationException("Event Is Cancelled or Ended");

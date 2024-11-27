@@ -26,6 +26,5 @@ public class UserService
 			Password = command.Password,
 		};
         _userRepository.SaveUser(NewUser);
-
     }
 }
