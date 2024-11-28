@@ -34,7 +34,7 @@ public class EventService
             Location = command.Location,
             Status = command.Status
         };
-      await  _eventRepository.SaveEvent(newEvent);
+        await _eventRepository.SaveEvent(newEvent);
     }
 
     /// <summary>
@@ -82,6 +82,7 @@ public class EventService
         eventForUpdate.EndDate = command.EndDate;
         eventForUpdate.Location = command.Location;
 
-      await  _eventRepository.UpdateEvent(eventForUpdate);
+        await _eventRepository.UpdateEvent(eventForUpdate);
+        await _eventRepository.SaveEvent(eventForUpdate);
     }
 }
