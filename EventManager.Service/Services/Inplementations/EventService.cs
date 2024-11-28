@@ -17,7 +17,7 @@ public class EventService
      /// <summary>
      /// Method For Creating New Event (With Validation From Command)
      /// </summary>
-    public void CreateEvent(CreateEventCommand command)
+    public async Task CreateEvent(CreateEventCommand command)
     {
         command.Validate();
         command.ValidateDateAndDuration();
@@ -34,7 +34,7 @@ public class EventService
             Location = command.Location,
             Status = command.Status
         };
-        _eventRepository.SaveEvent(newEvent);
+      await  _eventRepository.SaveEvent(newEvent);
     }
 
     /// <summary>
@@ -48,13 +48,13 @@ public class EventService
     /// <exception cref="DomainException"></exception>
     /// 
 
-    public void UpdateEvent(UpdateEventCommand command)
+    public async Task  UpdateEvent(UpdateEventCommand command)
     {
         command.Validate();
         command.ValidateDateAndDuration();
         command.ValidationForUpdate();
 
-        var eventForUpdate = _eventRepository.GetById(command.EventId) ?? throw new NotFoundException("Event With this Id is not found");
+        var eventForUpdate = await _eventRepository.GetById(command.EventId) ?? throw new NotFoundException("Event With this Id is not found");
 
 
         if (eventForUpdate.Status == EventStatus.Cancelled) throw new ValidationException("Event Is Cancelled or Ended");
@@ -82,6 +82,6 @@ public class EventService
         eventForUpdate.EndDate = command.EndDate;
         eventForUpdate.Location = command.Location;
 
-        _eventRepository.UpdateEvent(eventForUpdate);
+      await  _eventRepository.UpdateEvent(eventForUpdate);
     }
 }

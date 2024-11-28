@@ -13,9 +13,9 @@ public class UserService
 		_userRepository = userRepository;
 	}
 
-	public void RegisterUser(UserCommand command)
+	public async Task RegisterUser(UserCommand command)
 	{
-		var existingUser = _userRepository.GetByUserName(command.UserName);
+		var existingUser = await _userRepository.GetByUserName(command.UserName);
 		if (existingUser != null) throw new ValidationException("This user already exist");
 
 		var NewUser = new User
@@ -25,6 +25,6 @@ public class UserService
 			Email = command.Email,
 			Password = command.Password,
 		};
-        _userRepository.SaveUser(NewUser);
+       await _userRepository.SaveUser(NewUser);
     }
 }

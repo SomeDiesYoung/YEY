@@ -14,39 +14,41 @@ public class FilterSearchAndFilterService : IEventFilterRepository
         _eventRepository = eventRepository;
     }
 
-    public Event FilterById(int id)
+    public async Task<Event> FilterById(int id)
     {
-        var eventItem = _eventRepository.GetById(id);
+        var eventItem = await _eventRepository.GetById(id);
 
         if (eventItem == null)
             throw new NotFoundException($"Event with ID {id} not found.");
 
-        return eventItem;
+        return await Task.FromResult(eventItem);
     }
 
-    public IEnumerable<Event> FilterByName(string name)
+    public async Task<IEnumerable<Event>> FilterByName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new ValidationException("Event name cannot be null or empty.");
 
-        var events = _eventRepository.GetAll()
-            .Where(e => e.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
-            .ToList();
+        var events = await _eventRepository.GetAll();
 
-        if (!events.Any())
+        var filteredEvents = events
+           .Where(e => e.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
+           .ToList();
+
+        if (!filteredEvents.Any())
             throw new NotFoundException($"No events found with name '{name}'.");
 
-        return events;
+        return await Task.FromResult(filteredEvents);
     }
 
-    public IEnumerable<Event> GetAll()
+    public async  Task<IEnumerable<Event>> GetAll()
     {
-        var events = _eventRepository.GetAll();
+        var events = await _eventRepository.GetAll();
 
         if (!events.Any())
             throw new NotFoundException("No events found.");
 
-        return events;
+        return await Task.FromResult(events);
     }
 
 }

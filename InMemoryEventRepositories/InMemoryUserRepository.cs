@@ -11,19 +11,20 @@ public class InMemoryUserRepository : IUserRepository
         _users = new List<User>();
     }
 
-    public User GetById(int id)
+    public Task<User> GetById(int id)
     {
-        return _users.FirstOrDefault(u => u.Id == id)
-            ?? throw new KeyNotFoundException($"User with Id {id} not found");
+        return Task.Run(()=> _users.FirstOrDefault(u => u.Id == id)
+            ?? throw new KeyNotFoundException($"User with Id {id} not found"));
     }
 
-    public User GetByUserName(string userName)
+    public Task<User> GetByUserName(string userName)
     {
-        return _users.FirstOrDefault(u => u.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase)) ??
-            throw new NotFoundException("User with this Name is not found");
+        return Task.Run(() => _users.FirstOrDefault(u => u.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase)) ??
+            throw new NotFoundException("User with this Name is not found"));
     }
 
-    public void SaveUser(User user)
+    public async Task SaveUser(User user)
+    {   await Task.Run(()=>
     {
         if (_users.Any(u => u.Id == user.Id))
         {
@@ -34,7 +35,9 @@ public class InMemoryUserRepository : IUserRepository
         {
             throw new InvalidOperationException($"User with UserName {user.UserName} already exists.");
         }
+        
+       _users.Add(user);
+    });
 
-        _users.Add(user);
     }
 }

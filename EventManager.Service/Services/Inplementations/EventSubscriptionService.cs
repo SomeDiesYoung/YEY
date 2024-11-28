@@ -17,13 +17,13 @@ public class EventSubscriptionService
         _eventRepository = eventRepository;
     }
 
-    public void SubscribeToEvent(EventSubscriptionCommand command)
+    public async Task SubscribeToEvent(EventSubscriptionCommand command)
     {
         command.Validate();
-        var currentEvent = _eventRepository.GetById(command.EventId);
+        var currentEvent = await _eventRepository.GetById(command.EventId);
         currentEvent.EnsureIsActive();
 
-        if (_eventSubscriptionRepository.Exists(command.EventId, command.UserId))
+        if (await _eventSubscriptionRepository.Exists(command.EventId, command.UserId))
             return;
 
         var NewSubscription = new EventSubscription
@@ -33,16 +33,16 @@ public class EventSubscriptionService
             UserId = command.UserId,
         };
 
-        _eventSubscriptionRepository.AddSubscription(NewSubscription);
+       await _eventSubscriptionRepository.AddSubscription(NewSubscription);
 
     }
 
-    public void UnSubscribeFromEvent(EventSubscriptionCommand command)
+    public async Task UnSubscribeFromEvent(EventSubscriptionCommand command)
     {
         command.Validate();
-        var currentEvent = _eventRepository.GetById(command.EventId);
+        var currentEvent = await _eventRepository.GetById(command.EventId);
         currentEvent.EnsureIsActive();
 
-        _eventSubscriptionRepository.RemoveSubscription(command.UserId, command.EventId);
+       await _eventSubscriptionRepository.RemoveSubscription(command.UserId, command.EventId);
     }
 }

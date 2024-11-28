@@ -6,7 +6,7 @@ namespace EventManager.Service.Services.Abstractions;
 
 public interface IEventSubscriptionRepository
 {
-    void AddSubscription(EventSubscription Subscription);
-    void RemoveSubscription(int userId,int eventId);
-    bool Exists(int eventId, int userId);
+    Task AddSubscription(EventSubscription Subscription);
+    Task RemoveSubscription(int userId,int eventId);
+    Task<bool> Exists(int eventId, int userId);
 }

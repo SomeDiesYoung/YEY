@@ -37,33 +37,38 @@ namespace InMemoryEventRepositories
     };
         }
 
-        public IEnumerable<Event> GetAll()
+        public async Task<IEnumerable<Event>> GetAll()
         {
-            return _events;
+            return await Task.Run(()=>(_events));
         }
 
-        public Event GetById(int Id)
+        public async Task<Event> GetById(int Id)
         {
-            return _events.FirstOrDefault(e => e.Id == Id) ?? throw new NotFoundException("Not Found By this Id");
+            return await Task.Run(() => (_events.FirstOrDefault(e => e.Id == Id) ?? throw new NotFoundException("Not Found By this Id")));
         }
 
-        public IEnumerable<Event> GetByName(string name)
+        public async Task<IEnumerable<Event>> GetByName(string name)
         {
-            return _events.Where(e => e.Name.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
+            return await Task.Run(()=>(_events.Where(e => e.Name.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList()));
         }
 
-        public void SaveEvent(Event eventItem)
+        public async Task SaveEvent(Event eventItem)
         {
-            var existingEvent = _events.FirstOrDefault(e => e.Id == eventItem.Id);
-            if (existingEvent != null)
+            await Task.Run(() =>
             {
-                throw new InvalidOperationException($"Event with Id {eventItem.Id} already exists.");
+                var existingEvent = _events.FirstOrDefault(e => e.Id == eventItem.Id);
+                if (existingEvent != null)
+                {
+                    throw new InvalidOperationException($"Event with Id {eventItem.Id} already exists.");
+                }
+
+                _events.Add(eventItem);
+            });
             }
 
-            _events.Add(eventItem);
-        }
-      
-            public void UpdateEvent(Event eventItem)
+        public async Task UpdateEvent(Event eventItem)
+        {
+            await Task.Run(() =>
             {
                 var existingEvent = _events.FirstOrDefault(e => e.Id == eventItem.Id);
                 if (existingEvent == null)
@@ -77,6 +82,7 @@ namespace InMemoryEventRepositories
                 existingEvent.Duration = eventItem.Duration;
                 existingEvent.Location = eventItem.Location;
                 existingEvent.Status = eventItem.Status;
+            });
             }
         }
     }

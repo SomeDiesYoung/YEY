@@ -3,10 +3,10 @@ namespace EventManager.Service.Services.Abstractions
 {
     public interface IEventRepository
     {
-        Event GetById(int Id);
-        IEnumerable<Event> GetByName(string Name);
-        IEnumerable<Event> GetAll(); 
-        void UpdateEvent(Event Event);
-        void SaveEvent(Event Event);
+        Task<Event> GetById(int Id);
+        Task<IEnumerable<Event>> GetByName(string Name);
+        Task<IEnumerable<Event>> GetAll(); 
+        Task UpdateEvent(Event Event);
+        Task SaveEvent(Event Event);
     }
 }
