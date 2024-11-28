@@ -4,7 +4,9 @@ namespace EventManager.Service.Services.Abstractions
     public interface IEventRepository
     {
         Event GetById(int Id);
-        Event GetByName(string Name);
+        IEnumerable<Event> GetByName(string Name);
+        IEnumerable<Event> GetAll(); 
+        void UpdateEvent(Event Event);
         void SaveEvent(Event Event);
     }
 }

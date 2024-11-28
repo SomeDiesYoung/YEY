@@ -6,7 +6,7 @@ using EventManager.Service.Services.Abstractions;
 
 namespace EventManager.Service.Services.Inplementations;
 
-public class EventService
+public class EventService 
 {
     private readonly IEventRepository _eventRepository;
     public EventService(IEventRepository eventRepository)
@@ -36,6 +36,7 @@ public class EventService
         };
         _eventRepository.SaveEvent(newEvent);
     }
+
     /// <summary>
     /// 
     /// Updating already existing Event by custom command (with own Validations) and Status Change 
@@ -81,6 +82,6 @@ public class EventService
         eventForUpdate.EndDate = command.EndDate;
         eventForUpdate.Location = command.Location;
 
-        _eventRepository.SaveEvent(eventForUpdate);
+        _eventRepository.UpdateEvent(eventForUpdate);
     }
 }

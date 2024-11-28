@@ -4,6 +4,8 @@ namespace EventManager.Service.Services.Abstractions;
 
 public interface IEventFilterRepository
 { 
-    Event GetById(int id);
-    IEnumerable<Event?> GetAll();
+    Event FilterById(int id);
+    IEnumerable<Event> FilterByName(string name);
+    IEnumerable<Event> GetAll();
+
 }
