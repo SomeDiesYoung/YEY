@@ -18,10 +18,7 @@ public class FilterSearchAndFilterService : IEventFilterRepository
     {
         var eventItem = await _eventRepository.GetById(id);
 
-        if (eventItem == null)
-            throw new NotFoundException($"Event with ID {id} not found.");
-
-        return await Task.FromResult(eventItem);
+        return eventItem == null ? throw new NotFoundException($"Event with ID {id} not found.") : await Task.FromResult(eventItem);
     }
 
     public async Task<IEnumerable<Event>> FilterByName(string name)

@@ -14,11 +14,11 @@ public class EventServiceTests
     {
         private readonly List<Event> _events = new();
 
-        public  Task<Event> GetById(int Id)
+        public  Task<Event?> GetById(int Id)
         {
 
             var eventItem = _events.Find(e => e.Id == Id);
-            return  Task.FromResult(eventItem);
+            return  Task.FromResult(eventItem) ?? throw new NotFoundException("Event is not found");
         }
 
         public Task<IEnumerable<Event>> GetByName(string Name)

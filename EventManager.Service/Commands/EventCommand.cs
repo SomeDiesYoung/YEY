@@ -7,7 +7,7 @@ namespace EventManager.Service.Commands;
 public abstract class EventCommand
 {
     /// <summary>
-    /// Event Id
+    /// Abstract Main Command Parent For Create,Update commmands
     /// </summary>
     public int EventId { get; set; }
     public required string Name { get; set; }

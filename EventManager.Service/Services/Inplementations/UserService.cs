@@ -15,6 +15,7 @@ public class UserService
 
 	public async Task RegisterUser(UserCommand command)
 	{
+		command.Validate();
 		var existingUser = await _userRepository.GetByUserName(command.UserName);
 		if (existingUser != null) throw new ValidationException("This user already exist");
 

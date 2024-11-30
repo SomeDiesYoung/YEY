@@ -42,7 +42,7 @@ namespace InMemoryEventRepositories
             return await Task.Run(()=>(_events));
         }
 
-        public async Task<Event> GetById(int Id)
+        public async Task<Event?> GetById(int Id)
         {
             return await Task.Run(() => (_events.FirstOrDefault(e => e.Id == Id) ?? throw new NotFoundException("Not Found By this Id")));
         }
@@ -70,11 +70,7 @@ namespace InMemoryEventRepositories
         {
             await Task.Run(() =>
             {
-                var existingEvent = _events.FirstOrDefault(e => e.Id == eventItem.Id);
-                if (existingEvent == null)
-                {
-                    throw new NotFoundException($"Event with ID {eventItem.Id} not found.");
-                }
+                var existingEvent = _events.FirstOrDefault(e => e.Id == eventItem.Id) ?? throw new NotFoundException($"Event with ID {eventItem.Id} not found.");
                 existingEvent.Name = eventItem.Name;
                 existingEvent.Description = eventItem.Description;
                 existingEvent.StartDate = eventItem.StartDate;

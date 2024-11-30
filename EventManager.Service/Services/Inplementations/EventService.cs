@@ -6,7 +6,7 @@ using EventManager.Service.Services.Abstractions;
 
 namespace EventManager.Service.Services.Inplementations;
 
-public class EventService 
+public class EventService
 {
     private readonly IEventRepository _eventRepository;
     public EventService(IEventRepository eventRepository)
@@ -14,9 +14,9 @@ public class EventService
         _eventRepository = eventRepository;
     }
 
-     /// <summary>
-     /// Method For Creating New Event (With Validation From Command)
-     /// </summary>
+    /// <summary>
+    /// Method For Creating New Event (With Validation From Command)
+    /// </summary>
     public async Task CreateEvent(CreateEventCommand command)
     {
         command.Validate();
@@ -48,7 +48,7 @@ public class EventService
     /// <exception cref="DomainException"></exception>
     /// 
 
-    public async Task  UpdateEvent(UpdateEventCommand command)
+    public async Task UpdateEvent(UpdateEventCommand command)
     {
         command.Validate();
         command.ValidateDateAndDuration();
@@ -56,33 +56,37 @@ public class EventService
 
         var eventForUpdate = await _eventRepository.GetById(command.EventId) ?? throw new NotFoundException("Event With this Id is not found");
 
-
         if (eventForUpdate.Status == EventStatus.Cancelled) throw new ValidationException("Event Is Cancelled or Ended");
-
-        //EventStatusHandler.ChangeStatus(eventForUpdate, command.Status); //Imena custaruli xerxia axals vaketeb mara mgoni magaze uaresi iqneba
-
-        switch (command.Status)
-        {
-            case EventStatus.Active:
-                eventForUpdate.Activate();
-                break;
-            case EventStatus.Postponed:
-                eventForUpdate.Postpone();
-                break;
-            case EventStatus.Cancelled:
-                eventForUpdate.Cancel();
-                break;
-            default:
-                throw new DomainException("Invalid status");
-        }
-
-
+        
+        eventForUpdate.Name = command.Name;
         eventForUpdate.Description = command.Description;
         eventForUpdate.StartDate = command.StartDate;
         eventForUpdate.EndDate = command.EndDate;
         eventForUpdate.Location = command.Location;
 
         await _eventRepository.UpdateEvent(eventForUpdate);
-        await _eventRepository.SaveEvent(eventForUpdate);
+    }
+
+    public async Task ActivateEvent(ActivateEventCommand command)
+    {
+        command.Validate();
+        var eventForActivate =  await _eventRepository.GetById(command.EventId) ?? throw new NotFoundException("Event With this Id is not found");
+        eventForActivate.Activate(command.StartDate,command.EndDate);
+        await _eventRepository.UpdateEvent(eventForActivate);
+    }
+    public async Task PostoneEvent(PostponeEventCommand command)
+    {
+        command.Validate();
+        var eventForPostone =  await _eventRepository.GetById(command.EventId) ?? throw new NotFoundException("Event With this Id is not found");
+        eventForPostone.Postpone(command.StartDate,command.EndDate);
+        await _eventRepository.UpdateEvent(eventForPostone);
+
+    }
+    public async Task Cancell(EventCommand command)
+    {
+        //dacenselebisas mchirdeba commandis validacia?
+        var eventForCancell = await _eventRepository.GetById(command.EventId) ?? throw new NotFoundException("Event With this Id is not found");
+        eventForCancell.Cancel();
+        await _eventRepository.UpdateEvent(eventForCancell);
     }
 }
