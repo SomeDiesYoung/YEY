@@ -12,14 +12,14 @@ public static class EmailValidation
     {
         if (string.IsNullOrWhiteSpace(email))
         {
-            throw new ValidationException("Email can't be empty or just whitespace.");
+            throw new ValidationException("Email can't be empty or just whitespace");
         }
 
         var trimmedEmail = email.Trim();
 
         if (trimmedEmail.EndsWith('.'))
         {
-            throw new ValidationException("Email can't end with a dot.");
+            throw new ValidationException("Email can't end with a dot");
         }
         if (trimmedEmail.Length < 1 || trimmedEmail.Length > 100)
             throw new ValidationException("Email length must be between 1 and 100 chars");
@@ -29,12 +29,12 @@ public static class EmailValidation
             var addr = new MailAddress(trimmedEmail);
             if (addr.Address != trimmedEmail)
             {
-                throw new ValidationException("Invalid email format.");
+                throw new ValidationException("Invalid email format");
             }
         }
         catch (FormatException)
         {
-            throw new ValidationException("Invalid email format.");
+            throw new ValidationException("Invalid email format");
         }
     }
 }
