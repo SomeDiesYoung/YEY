@@ -3,26 +3,41 @@ using EventManager.Service.Services.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace InMemoryEventRepositories
 {
-    internal class InMemoryEventSubscribtionRepositories : IEventSubscriptionRepository
+    internal class InMemoryEventSubscriptionRepository : IEventSubscriptionRepository
     {
-        public Task AddSubscription(EventSubscription Subscription)
+        private readonly List<EventSubscription> _subscriptions = new List<EventSubscription>();
+
+        public Task AddSubscription(EventSubscription subscription)
         {
-            throw new NotImplementedException();
+            if (_subscriptions.Any(s => s.UserId == subscription.UserId && s.EventId == subscription.EventId))
+            {
+                throw new InvalidOperationException("Subscription already exists.");
+            }
+
+            _subscriptions.Add(subscription);
+            return Task.CompletedTask;
         }
 
         public Task<bool> Exists(int eventId, int userId)
         {
-            throw new NotImplementedException();
+            var exists = _subscriptions.Any(s => s.EventId == eventId && s.UserId == userId);
+            return Task.FromResult(exists);
         }
 
         public Task RemoveSubscription(int userId, int eventId)
         {
-            throw new NotImplementedException();
+            var subscription = _subscriptions.FirstOrDefault(s => s.UserId == userId && s.EventId == eventId);
+            if (subscription == null)
+            {
+                throw new InvalidOperationException("Subscription not found.");
+            }
+
+            _subscriptions.Remove(subscription);
+            return Task.CompletedTask;
         }
     }
 }
