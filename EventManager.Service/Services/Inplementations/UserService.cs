@@ -1,8 +1,7 @@
 ﻿using EventManager.Service.Models;
 using EventManager.Service.Commands;
 using EventManager.Service.Services.Abstractions;
-using System.ComponentModel.DataAnnotations;
-
+using EventManager.Service.Exceptions;
 namespace EventManager.Service.Services.Inplementations;
 
 public class UserService
