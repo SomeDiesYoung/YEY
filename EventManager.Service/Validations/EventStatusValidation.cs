@@ -12,12 +12,8 @@ public static class EventStatusValidation
         if (currentEvent == null)
             throw new NotFoundException("Event not found.");
 
-        if (currentEvent.StartDate == null) 
+        if (currentEvent.StartDate == null || currentEvent.EndDate == null) 
             throw new ValidationException("Date Can`t be Null while activating");
-
-        if (currentEvent.EndDate == null) 
-            throw new ValidationException("Date Can`t be Null while activating");
-
 
         if (currentEvent.Status != EventStatus.Active)
             throw new ValidationException("Event is not active.");

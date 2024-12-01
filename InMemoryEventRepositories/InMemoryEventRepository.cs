@@ -10,8 +10,8 @@ namespace InMemoryEventRepositories
 
         public InMemoryEventRepository()
         {
-            _events = new List<Event>
-    {
+            _events =
+    [
         new Event
         {
             Id = 1,
@@ -34,7 +34,7 @@ namespace InMemoryEventRepositories
             Location = "Somewhere in Tbilisi N125",
             Status = EventStatus.Active
         }
-    };
+    ];
         }
 
         public async Task<IEnumerable<Event>> GetAll()
