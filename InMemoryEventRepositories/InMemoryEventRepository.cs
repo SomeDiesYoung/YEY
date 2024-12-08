@@ -1,10 +1,11 @@
 ﻿using EventManager.Service.Models;
 using EventManager.Service.Services.Abstractions;
 using EventManager.Service.Exceptions;
+using EventManager.Service.Models.Enums;
 
 namespace InMemoryEventRepositories
 {
-    public class InMemoryEventRepository : IEventRepository 
+    public class InMemoryEventRepository : IEventRepository
     {
         private readonly List<Event> _events;
 
@@ -37,22 +38,27 @@ namespace InMemoryEventRepositories
     ];
         }
 
-        public async Task<IEnumerable<Event>> GetAll()
+        public async Task<IEnumerable<Event>> GetAllAsync()
         {
-            return await Task.Run(()=>(_events));
+            return await Task.Run(() => (_events));
         }
 
-        public async Task<Event?> GetById(int Id)
+        public async Task<Event> GetByIdAsync(int id)
         {
-            return await Task.Run(() => (_events.FirstOrDefault(e => e.Id == Id) ?? throw new NotFoundException("Not Found By this Id")));
+            return await Task.Run(() => GetByIdOrDefaultAsync(id) ?? throw new NotFoundException("Not Found By this Id")) ?? throw new  NotFoundException("Event with this id is not found");
         }
 
-        public async Task<IEnumerable<Event>> GetByName(string name)
+        public async Task<Event?> GetByIdOrDefaultAsync(int id)
         {
-            return await Task.Run(()=>(_events.Where(e => e.Name.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList()));
+            var @event = _events.FirstOrDefault(@event => @event.Id == id);
+            return await Task.FromResult(@event);
         }
 
-        public async Task SaveEvent(Event eventItem)
+        public async Task<Event> GetByNameAsync(string name)
+        {
+            return await Task.Run(() => _events.First(e => e.Name.Contains(name, StringComparison.OrdinalIgnoreCase)));
+        }
+        public async Task SaveEventAsync(Event eventItem)
         {
             await Task.Run(() =>
             {
@@ -64,9 +70,10 @@ namespace InMemoryEventRepositories
 
                 _events.Add(eventItem);
             });
-            }
+        }
 
-        public async Task UpdateEvent(Event eventItem)
+
+        public async Task SaveEvent(Event eventItem)
         {
             await Task.Run(() =>
             {
@@ -79,8 +86,7 @@ namespace InMemoryEventRepositories
                 existingEvent.Location = eventItem.Location;
                 existingEvent.Status = eventItem.Status;
             });
-            }
         }
     }
+}
 
- 

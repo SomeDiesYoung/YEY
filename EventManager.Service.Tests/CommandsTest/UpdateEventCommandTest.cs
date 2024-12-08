@@ -3,7 +3,7 @@ using Xunit;
 using FluentAssertions;
 using EventManager.Service.Commands;
 using EventManager.Service.Exceptions;
-using EventManager.Service.Models;
+using EventManager.Service.Models.Enums;
 
 namespace EventManager.Tests;
 

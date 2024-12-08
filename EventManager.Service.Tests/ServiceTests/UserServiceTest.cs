@@ -17,7 +17,7 @@ public class UserServiceTest
         //Arrange
         var repository = new Mock<IUserRepository>();
         repository.Setup(x => x.GetByUserName(It.IsAny<string>()))
-            .ReturnsAsync((User)null);
+            .ReturnsAsync((User)null!);
         repository.Setup(x => x.SaveUser(It.IsAny<User>()))
             .Returns(Task.CompletedTask);
 
@@ -102,7 +102,7 @@ public class UserServiceTest
         //Arrange
         var repository = new Mock<IUserRepository>();
         repository.Setup(x => x.GetByUserName(It.IsAny<string>()))
-            .ReturnsAsync((User)null);
+            .ReturnsAsync((User)null!);
 
         var service = new UserService(repository.Object);
         var command = new UserCommand

@@ -2,6 +2,7 @@
 using EventManager.Service.Commands;
 using EventManager.Service.Exceptions;
 using EventManager.Service.Models;
+using EventManager.Service.Models.Enums;
 using EventManager.Service.Services.Abstractions;
 
 namespace EventManager.Service.Services.Inplementations;
@@ -17,11 +18,12 @@ public class EventService
     /// <summary>
     /// Method For Creating New Event (With Validation From Command)
     /// </summary>
+    /// 
     public async Task CreateEvent(CreateEventCommand command)
     {
         command.Validate();
         command.ValidateDateAndDuration();
-        command.Validate(_eventRepository);
+        command.EventExist(_eventRepository);
 
         var newEvent = new Event
         {
@@ -34,7 +36,7 @@ public class EventService
             Location = command.Location,
             Status = command.Status
         };
-        await _eventRepository.SaveEvent(newEvent);
+        await _eventRepository.SaveEventAsync(newEvent);
     }
 
     /// <summary>
@@ -54,7 +56,7 @@ public class EventService
         command.ValidateDateAndDuration();
         command.ValidationForUpdate();
 
-        var eventForUpdate = await _eventRepository.GetById(command.EventId) ?? throw new NotFoundException("Event With this Id is not found");
+        var eventForUpdate = await _eventRepository.GetByIdAsync(command.EventId) ?? throw new NotFoundException("Event With this Id is not found");
 
         if (eventForUpdate.Status == EventStatus.Cancelled) throw new ValidationException("Event Is Cancelled or Ended");
         
@@ -64,29 +66,28 @@ public class EventService
         eventForUpdate.EndDate = command.EndDate;
         eventForUpdate.Location = command.Location;
 
-        await _eventRepository.UpdateEvent(eventForUpdate);
+        await _eventRepository.SaveEventAsync(eventForUpdate);
     }
 
     public async Task ActivateEvent(ActivateEventCommand command)
     {
         command.Validate();
-        var eventForActivate =  await _eventRepository.GetById(command.EventId) ?? throw new NotFoundException("Event With this Id is not found");
+        var eventForActivate =  await _eventRepository.GetByIdAsync(command.EventId) ?? throw new NotFoundException("Event With this Id is not found");
         eventForActivate.Activate(command.StartDate,command.EndDate);
-        await _eventRepository.UpdateEvent(eventForActivate);
+        await _eventRepository.SaveEventAsync(eventForActivate);
     }
     public async Task PostoneEvent(PostponeEventCommand command)
     {
         command.Validate();
-        var eventForPostone =  await _eventRepository.GetById(command.EventId) ?? throw new NotFoundException("Event With this Id is not found");
+        var eventForPostone =  await _eventRepository.GetByIdAsync(command.EventId) ?? throw new NotFoundException("Event With this Id is not found");
         eventForPostone.Postpone(command.StartDate,command.EndDate);
-        await _eventRepository.UpdateEvent(eventForPostone);
+        await _eventRepository.SaveEventAsync(eventForPostone);
 
     }
     public async Task Cancell(EventCommand command)
     {
-        //dacenselebisas mchirdeba commandis validacia?
-        var eventForCancell = await _eventRepository.GetById(command.EventId) ?? throw new NotFoundException("Event With this Id is not found");
+        var eventForCancell = await _eventRepository.GetByIdAsync(command.EventId) ?? throw new NotFoundException("Event With this Id is not found");
         eventForCancell.Cancel();
-        await _eventRepository.UpdateEvent(eventForCancell);
+        await _eventRepository.SaveEventAsync(eventForCancell);
     }
 }

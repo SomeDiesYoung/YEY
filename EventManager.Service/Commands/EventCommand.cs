@@ -1,6 +1,6 @@
 ﻿
 using EventManager.Service.Exceptions;
-using EventManager.Service.Models;
+using EventManager.Service.Models.Enums;
 
 namespace EventManager.Service.Commands;
 

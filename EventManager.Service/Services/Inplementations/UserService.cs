@@ -19,12 +19,12 @@ public class UserService
 		if (existingUser != null) throw new ValidationException("This user already exist");
 
 		var NewUser = new User
-		{
-			Id = command.UserId,
-			UserName = command.UserName,
-			Email = command.Email,
-			Password = command.Password,
-		};
+		(
+			id : command.UserId,
+			userName : command.UserName,
+			email : command.Email,
+			password : command.Password
+		);
        await _userRepository.SaveUser(NewUser);
     }
 }

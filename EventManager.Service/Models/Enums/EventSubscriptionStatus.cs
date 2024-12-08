@@ -1,4 +1,4 @@
-﻿namespace EventManager.Service.Models;
+﻿namespace EventManager.Service.Models.Enums;
 
 public enum EventSubscriptionStatus
 {

@@ -18,9 +18,9 @@ public class CreateEventCommand : EventCommand
         Duration = EndDate - StartDate;
         
     }
-    public  void Validate(IEventRepository eventRepository)
+    public  void EventExist(IEventRepository eventRepository)
     {
-        var existingEvent = eventRepository.GetByName(Name);
+        var existingEvent = eventRepository.GetByNameAsync(Name);
         if (existingEvent != null)
         {
             throw new ValidationException($"An event with the name '{Name}' already exists");

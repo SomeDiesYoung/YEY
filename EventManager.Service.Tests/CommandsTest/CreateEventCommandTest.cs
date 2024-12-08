@@ -1,10 +1,10 @@
 ﻿using EventManager.Service.Commands;
-using EventManager.Service.Models;
 using EventManager.Service.Exceptions;
 using FluentAssertions;
 using Moq;
 using EventManager.Service.Services.Abstractions;
 using System.Xml.Linq;
+using EventManager.Service.Models.Enums;
 namespace EventManager.Service.Tests.Commands.Test;
 
 public class CreateEventCommandTest

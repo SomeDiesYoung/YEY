@@ -1,4 +1,5 @@
-﻿using EventManager.Service.Validations;
+﻿using EventManager.Service.Models.Enums;
+using EventManager.Service.Validations;
 
 namespace EventManager.Service.Models;
 
@@ -12,6 +13,8 @@ public class Event
     public TimeSpan? Duration { get; set; } 
     public required string Location { get; set; }
     public EventStatus Status { get; set; } = EventStatus.Active;
+
+ 
 
     public void Activate(DateTime startDate, DateTime endDate)
     {

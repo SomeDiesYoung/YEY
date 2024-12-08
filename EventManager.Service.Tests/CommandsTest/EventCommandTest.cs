@@ -1,6 +1,6 @@
 using EventManager.Service.Commands;
 using EventManager.Service.Exceptions;
-using EventManager.Service.Models;
+using EventManager.Service.Models.Enums;
 using FluentAssertions;
 using System.Xml.Linq;
 

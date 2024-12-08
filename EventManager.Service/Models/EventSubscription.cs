@@ -1,4 +1,6 @@
 ﻿
+using EventManager.Service.Models.Enums;
+
 namespace EventManager.Service.Models;
 
 public class EventSubscription

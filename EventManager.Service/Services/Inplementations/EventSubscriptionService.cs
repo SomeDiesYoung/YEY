@@ -1,6 +1,7 @@
 ﻿
 using EventManager.Service.Commands;
 using EventManager.Service.Models;
+using EventManager.Service.Models.Enums;
 using EventManager.Service.Services.Abstractions;
 using EventManager.Service.Validations;
 
@@ -20,7 +21,7 @@ public class EventSubscriptionService
     public async Task SubscribeToEvent(EventSubscriptionCommand command)
     {
         command.Validate();
-        var currentEvent = await _eventRepository.GetById(command.EventId);
+        var currentEvent = await _eventRepository.GetByIdAsync(command.EventId);
         currentEvent.EnsureIsActive();
 
         if (await _eventSubscriptionRepository.Exists(command.EventId, command.UserId))
@@ -40,7 +41,7 @@ public class EventSubscriptionService
     public async Task UnSubscribeFromEvent(EventSubscriptionCommand command)
     {
         command.Validate();
-        var currentEvent = await _eventRepository.GetById(command.EventId);
+        var currentEvent = await _eventRepository.GetByIdAsync(command.EventId);
         currentEvent.EnsureIsActive();
 
        await _eventSubscriptionRepository.RemoveSubscription(command.UserId, command.EventId);

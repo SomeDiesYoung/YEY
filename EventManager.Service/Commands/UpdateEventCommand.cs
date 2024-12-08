@@ -1,5 +1,5 @@
 ﻿using EventManager.Service.Exceptions;
-using EventManager.Service.Models;
+using EventManager.Service.Models.Enums;
 using System.Security.Cryptography.X509Certificates;
 namespace EventManager.Service.Commands;
 
