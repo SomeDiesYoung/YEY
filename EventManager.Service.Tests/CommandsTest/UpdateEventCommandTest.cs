@@ -38,7 +38,7 @@ public class UpdateEventCommandTests
         var command = new UpdateEventCommand
         {
             StartDate = DateTime.Now.AddDays(1),
-            EndDate = DateTime.Now.AddDays(1),
+            EndDate = DateTime.Now.AddDays(-1),
             Name = "Test Event",
             Description = "Test Description",
             Location = "Test Location",
@@ -50,7 +50,7 @@ public class UpdateEventCommandTests
 
         // Assert
         act.Should().Throw<ValidationException>()
-           .WithMessage("End date must be later than start date.");
+           .WithMessage("End date must be later or equal start date.");
     }
 
     [Fact(DisplayName = "ხანგრძლივობა უნდა იყოს ვალიდური როდესაც თარიღი სშორადაა მოცემული")]
@@ -58,7 +58,7 @@ public class UpdateEventCommandTests
     {
         // Arrange
         var startDate = DateTime.Now.AddDays(1);
-        var endDate = DateTime.Now.AddDays(2);
+        var endDate = DateTime.Now.AddDays(1);
         var command = new UpdateEventCommand
         {
             StartDate = startDate,

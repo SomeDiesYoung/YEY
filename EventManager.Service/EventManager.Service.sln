@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventManager.Service", "Eve
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InMemoryEventRepositories", "..\InMemoryEventRepositories\InMemoryEventRepositories.csproj", "{BD377FF1-AFE2-4845-BF52-6D1C687239AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventManager.Service.Tests", "..\EventManager.Service.Tests\EventManager.Service.Tests.csproj", "{3AF61F2B-F4D8-427F-9123-6577B68A085A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventManager.Service.Tests", "..\EventManager.Service.Tests\EventManager.Service.Tests.csproj", "{3AF61F2B-F4D8-427F-9123-6577B68A085A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventManager.ConsoleApp", "..\EventManager.ConsoleApp\EventManager.ConsoleApp.csproj", "{FA9579E6-5EEC-4E6D-8857-6125373E3390}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{3AF61F2B-F4D8-427F-9123-6577B68A085A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3AF61F2B-F4D8-427F-9123-6577B68A085A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3AF61F2B-F4D8-427F-9123-6577B68A085A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA9579E6-5EEC-4E6D-8857-6125373E3390}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA9579E6-5EEC-4E6D-8857-6125373E3390}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA9579E6-5EEC-4E6D-8857-6125373E3390}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA9579E6-5EEC-4E6D-8857-6125373E3390}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

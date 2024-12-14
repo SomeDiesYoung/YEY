@@ -16,7 +16,7 @@ public abstract class EventCommand
     public DateTime EndDate { get; set; }
     public TimeSpan Duration { get; set; }
     public required string Location { get; set; }
-    public required EventStatus Status { get; set; } 
+    public  virtual EventStatus Status { get; set; } = EventStatus.Active;
 
 
     public virtual void  Validate()

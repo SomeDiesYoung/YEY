@@ -1,4 +1,5 @@
-﻿using EventManager.Service.Models;
+﻿using EventManager.Service.Exceptions;
+using EventManager.Service.Models;
 using EventManager.Service.Services.Abstractions;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace InMemoryEventRepositories
 {
-    internal class InMemoryEventSubscriptionRepository : IEventSubscriptionRepository
+    public class InMemoryEventSubscriptionRepository : IEventSubscriptionRepository
     {
         private readonly List<EventSubscription> _subscriptions = new List<EventSubscription>();
 
@@ -15,7 +16,7 @@ namespace InMemoryEventRepositories
         {
             if (_subscriptions.Any(s => s.UserId == subscription.UserId && s.EventId == subscription.EventId))
             {
-                throw new InvalidOperationException("Subscription already exists.");
+                throw new NotFoundException("Subscription already exists.");
             }
 
             _subscriptions.Add(subscription);
@@ -33,7 +34,7 @@ namespace InMemoryEventRepositories
             var subscription = _subscriptions.FirstOrDefault(s => s.UserId == userId && s.EventId == eventId);
             if (subscription == null)
             {
-                throw new InvalidOperationException("Subscription not found.");
+                throw new NotFoundException("Subscription not found.");
             }
 
             _subscriptions.Remove(subscription);

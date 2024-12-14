@@ -11,9 +11,9 @@ public class UpdateEventCommand : EventCommand
        
         if (DateTime.Now > StartDate) throw new ValidationException("Start date must be in future");
 
-        if (EndDate <= StartDate)
+        if (EndDate < StartDate)
         {
-            throw new ValidationException("End date must be later than start date.");
+            throw new ValidationException("End date must be later or equal start date.");
         }
         Duration = EndDate - StartDate;
     }

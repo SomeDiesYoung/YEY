@@ -23,7 +23,7 @@ public class EventService
     {
         command.Validate();
         command.ValidateDateAndDuration();
-        command.EventExist(_eventRepository);
+        if (command.EventExist(_eventRepository)) throw new DomainException("Event already exist");
 
         var newEvent = new Event
         {

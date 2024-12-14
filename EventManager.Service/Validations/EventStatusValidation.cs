@@ -8,7 +8,7 @@ namespace EventManager.Service.Validations;
 
 public static class EventStatusValidation
 {
-    public static void EnsureIsActive(this Event? currentEvent)
+    public static bool EnsureIsActive(this Event? currentEvent)
     {
         if (currentEvent == null)
             throw new NotFoundException("Event not found.");
@@ -21,6 +21,8 @@ public static class EventStatusValidation
 
         if (currentEvent.EndDate <= DateTime.Now)
             throw new ValidationException("Event has already ended.");
+
+        return true;
     }
 
     public static void EnsureNotCancelled(this EventStatus status)

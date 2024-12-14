@@ -72,11 +72,12 @@ public class UserServiceTest
         var repository = new Mock<IUserRepository>();
         repository.Setup(x => x.GetByUserName(It.IsAny<string>()))
             .ReturnsAsync(new User
-            {
-                UserName = "ChillGuy",
-                Email = "WorkingWorkingMakingMyCodeBetterThatsNotEasyButImChillGuy@gmail.eu",
-                Password = "MyPassword!"
-            });
+             (  id: 1,
+                userName: "ChillGuy",
+                password: "MyPassword!",
+                email: "WorkingWorkingMakingMyCodeBetterThatsNotEasyButImChillGuy@gmail.eu"
+
+            ));
         var service = new UserService(repository.Object);
         var command = new UserCommand
         {

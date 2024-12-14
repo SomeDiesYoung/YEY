@@ -1,0 +1,27 @@
+[
+  {
+    "EventId": 1,
+    "Name": "test",
+    "Description": "test description",
+    "StartDate": "2026-11-03",
+    "EndDate": "2026-12-20",
+    "Location": "MyBackyard",
+    "Status": 10
+  },
+  {
+    "EventId": 2,
+    "Name": "test2",
+    "Description": "test2 description",
+    "StartDate": "2025-02-06",
+    "EndDate": "2025-02-18",
+    "Location": "SomeWhere"
+  },
+  {
+    "EventId": 3,
+    "Name": "test3",
+    "Description": "test3 description",
+    "StartDate": "2025-04-01",
+    "EndDate": "2025-04-07",
+    "Location": "Lorem ipsum"
+  }
+]

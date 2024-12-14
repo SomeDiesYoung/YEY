@@ -38,6 +38,8 @@ namespace InMemoryEventRepositories
     ];
         }
 
+   
+
         public async Task<IEnumerable<Event>> GetAllAsync()
         {
             return await Task.Run(() => (_events));
@@ -54,39 +56,27 @@ namespace InMemoryEventRepositories
             return await Task.FromResult(@event);
         }
 
-        public async Task<Event> GetByNameAsync(string name)
+        public async Task<Event?> GetByNameAsync(string name)
         {
-            return await Task.Run(() => _events.First(e => e.Name.Contains(name, StringComparison.OrdinalIgnoreCase)));
+            return await Task.Run(() => _events.First(e => e.Name.ToLower().Contains(name.ToLower(), StringComparison.OrdinalIgnoreCase)));
         }
+
         public async Task SaveEventAsync(Event eventItem)
         {
             await Task.Run(() =>
             {
-                var existingEvent = _events.FirstOrDefault(e => e.Id == eventItem.Id);
-                if (existingEvent != null)
-                {
-                    throw new InvalidOperationException($"Event with Id {eventItem.Id} already exists.");
-                }
+                // We have in memory collection of account so we do not write account anywhere
 
-                _events.Add(eventItem);
+                return Task.CompletedTask;
             });
         }
 
 
-        public async Task SaveEvent(Event eventItem)
+        public async Task<Event?> GetByFullName(string name)
         {
-            await Task.Run(() =>
-            {
-                var existingEvent = _events.FirstOrDefault(e => e.Id == eventItem.Id) ?? throw new NotFoundException($"Event with ID {eventItem.Id} not found.");
-                existingEvent.Name = eventItem.Name;
-                existingEvent.Description = eventItem.Description;
-                existingEvent.StartDate = eventItem.StartDate;
-                existingEvent.EndDate = eventItem.EndDate;
-                existingEvent.Duration = eventItem.Duration;
-                existingEvent.Location = eventItem.Location;
-                existingEvent.Status = eventItem.Status;
-            });
+            return await Task.Run(() => _events.FirstOrDefault(e => e.Name.ToLower() == name.ToLower()));
         }
+
     }
 }
 

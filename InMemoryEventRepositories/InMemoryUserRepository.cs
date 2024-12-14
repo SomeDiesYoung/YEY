@@ -14,7 +14,7 @@ public class InMemoryUserRepository : IUserRepository
     public Task<User> GetById(int id)
     {
         return Task.Run(()=> _users.FirstOrDefault(u => u.Id == id)
-            ?? throw new KeyNotFoundException($"User with Id {id} not found"));
+            ?? throw new NotFoundException($"User with Id {id} not found"));
     }
 
     public Task<User> GetByUserName(string userName)
@@ -23,21 +23,8 @@ public class InMemoryUserRepository : IUserRepository
             throw new NotFoundException("User with this Name is not found"));
     }
 
-    public async Task SaveUser(User user)
-    {   await Task.Run(()=>
+    public  Task SaveUser(User user)
     {
-        if (_users.Any(u => u.Id == user.Id))
-        {
-            throw new InvalidOperationException($"User with Id {user.Id} already exists.");
-        }
-
-        if (_users.Any(u => u.UserName.Equals(user.UserName, StringComparison.OrdinalIgnoreCase)))
-        {
-            throw new InvalidOperationException($"User with UserName {user.UserName} already exists.");
-        }
-        
-       _users.Add(user);
-    });
-
+        return  Task.CompletedTask;
     }
 }

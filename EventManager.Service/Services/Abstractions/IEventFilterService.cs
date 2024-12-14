@@ -4,8 +4,8 @@ namespace EventManager.Service.Services.Abstractions;
 
 public interface IEventFilterService
 { 
-    Task<Event> FilterById(int id);
-    Task<IEnumerable<Event>> FilterByName(string name);
-    //Task<IEnumerable<Event>> GetAll();
-
+    Task<Event?> FilterByIdAsync(int id);
+    Task<IEnumerable<Event?>> FilterByEventStatusAndDateAsync(DateTime startDate);
+    Task<IEnumerable<Event>> FilterByNameAsync(string name);
 }
+    
