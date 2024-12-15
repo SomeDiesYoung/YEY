@@ -23,9 +23,28 @@ internal class Program
 
 
         var json = File.ReadAllText("G:\\C#projects\\GEOLAB\\Ehhhh\\YEY\\EventManager.ConsoleApp\\CreateCommand.json");
+
+        //Yvelaze kustaruli check of functionality
+
+
+        //Event Service
         var CreateEventCommands = JsonSerializer.Deserialize<List<CreateEventCommand>>(json);
-        var UpdateEventCommands = JsonSerializer.Deserialize<List<UpdateEventCommand>>(json);
-        //await EventService.UpdateEvent(UpdateEventCommands.FirstOrDefault());
-        //await EventService.CreateEvent(CreateEventCommands[2]);
+        var UpdateEventCommands = JsonSerializer.Deserialize<List<EventCommand>>(json);
+        var ActivateEventCommands = JsonSerializer.Deserialize<List<ActivateEventCommand>>(json);
+        var PostponeEventCommands = JsonSerializer.Deserialize<List<PostponeEventCommand>>(json);
+        var CanselEvents = JsonSerializer.Deserialize<List<EventCommand>>(json);
+
+
+        await EventService.CreateEvent(CreateEventCommands[1]);
+         await EventService.ActivateEvent(ActivateEventCommands[1]);
+        await EventService.PostoneEvent(PostponeEventCommands[0]);
+        await EventService.CancelEvent(CanselEvents[1]);
+
+        //User Service
+        var UserRepository = new InMemoryUserRepository();
+        var UserService = new UserService(UserRepository);
+
+        var userJson = File.ReadAllText("G:\\C#projects\\GEOLAB\\Ehhhh\\YEY\\EventManager.ConsoleApp\\Users.json");
+
     }
 }

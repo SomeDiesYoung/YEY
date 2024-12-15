@@ -14,7 +14,8 @@
     "Description": "test2 description",
     "StartDate": "2025-02-06",
     "EndDate": "2025-02-18",
-    "Location": "SomeWhere"
+    "Location": "SomeWhere",
+     "Status" : 20
   },
   {
     "EventId": 3,
@@ -22,6 +23,7 @@
     "Description": "test3 description",
     "StartDate": "2025-04-01",
     "EndDate": "2025-04-07",
-    "Location": "Lorem ipsum"
+    "Location": "Lorem ipsum",
+    "Status" : 30
   }
 ]

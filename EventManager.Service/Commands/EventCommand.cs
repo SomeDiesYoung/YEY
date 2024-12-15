@@ -4,7 +4,7 @@ using EventManager.Service.Models.Enums;
 
 namespace EventManager.Service.Commands;
 
-public abstract class EventCommand
+public class EventCommand
 {
     /// <summary>
     /// Abstract Main Command Parent For Create,Update commmands
@@ -16,7 +16,7 @@ public abstract class EventCommand
     public DateTime EndDate { get; set; }
     public TimeSpan Duration { get; set; }
     public required string Location { get; set; }
-    public  virtual EventStatus Status { get; set; } = EventStatus.Active;
+    public virtual EventStatus Status { get;  set; } = EventStatus.Active;
 
 
     public virtual void  Validate()
@@ -26,7 +26,7 @@ public abstract class EventCommand
         if (Description.Length < 1 || Description.Length > 4000 || string.IsNullOrWhiteSpace(Description)) throw new ValidationException("Description text length must be between 1 and 4000 chars");
         if (Location.Length < 1 || Location.Length > 4000 || string.IsNullOrWhiteSpace(Location)) throw new ValidationException("Location length must be between 1 and 4000 chars");
     }
-    
-        
-    public abstract void ValidateDateAndDuration(); 
+
+
+    public virtual void ValidateDateAndDuration() {  }
 }

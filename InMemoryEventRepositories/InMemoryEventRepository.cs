@@ -33,7 +33,7 @@ namespace InMemoryEventRepositories
             EndDate = DateTime.Now.AddDays(7),
             Duration = TimeSpan.FromDays(5),
             Location = "Somewhere in Tbilisi N125",
-            Status = EventStatus.Active
+            Status = EventStatus.Postponed
         }
     ];
         }
@@ -42,14 +42,13 @@ namespace InMemoryEventRepositories
 
         public async Task<IEnumerable<Event>> GetAllAsync()
         {
-            return await Task.Run(() => (_events));
+            return await Task.FromResult(_events);
         }
-
         public async Task<Event> GetByIdAsync(int id)
         {
-            return await Task.Run(() => GetByIdOrDefaultAsync(id) ?? throw new NotFoundException("Not Found By this Id")) ?? throw new  NotFoundException("Event with this id is not found");
+            var eventItem = await GetByIdOrDefaultAsync(id);
+            return eventItem == null ? throw new NotFoundException("Event with this id is not found") : eventItem;
         }
-
         public async Task<Event?> GetByIdOrDefaultAsync(int id)
         {
             var @event = _events.FirstOrDefault(@event => @event.Id == id);
@@ -58,7 +57,7 @@ namespace InMemoryEventRepositories
 
         public async Task<Event?> GetByNameAsync(string name)
         {
-            return await Task.Run(() => _events.First(e => e.Name.ToLower().Contains(name.ToLower(), StringComparison.OrdinalIgnoreCase)));
+            return await Task.FromResult(_events.First(e => e.Name.ToLower().Contains(name.ToLower(), StringComparison.OrdinalIgnoreCase)));
         }
 
         public async Task SaveEventAsync(Event eventItem)
@@ -74,7 +73,7 @@ namespace InMemoryEventRepositories
 
         public async Task<Event?> GetByFullName(string name)
         {
-            return await Task.Run(() => _events.FirstOrDefault(e => e.Name.ToLower() == name.ToLower()));
+            return await Task.FromResult(_events.FirstOrDefault(e=>string.Equals(e.Name, name, StringComparison.OrdinalIgnoreCase)));
         }
 
     }

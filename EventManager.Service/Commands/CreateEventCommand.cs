@@ -6,7 +6,10 @@ namespace EventManager.Service.Commands;
 
 public class CreateEventCommand : EventCommand
 {
-    
+    public override EventStatus Status
+    {
+        get => EventStatus.Active; 
+    }
     public override void ValidateDateAndDuration()
     {
         if (StartDate < DateTime.Now)
@@ -18,17 +21,11 @@ public class CreateEventCommand : EventCommand
             throw new ValidationException("End date must be later than start date");
         }
         Duration = EndDate - StartDate;
-        
     }
-    public bool EventExist(IEventRepository eventRepository)
-    {
-        return eventRepository.GetByFullName(Name) == null;
+    public async Task<bool> EventExist(IEventRepository eventRepository)
 
-        //var existingEvent = eventRepository.GetByFullName(Name) ;
-        //if (existingEvent == null)
-        //{
-        //   return false ;
-        //}
-        //return true;
+    {
+        
+        return (await eventRepository.GetByFullName(Name) != null && await eventRepository.GetByIdAsync(EventId) != null);
     }
 }
