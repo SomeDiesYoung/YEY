@@ -16,7 +16,7 @@ public class UserServiceTest
     {
         //Arrange
         var repository = new Mock<IUserRepository>();
-        repository.Setup(x => x.GetByUserName(It.IsAny<string>()))
+        repository.Setup(x => x.GetByUserNameAsync(It.IsAny<string>()))
             .ReturnsAsync((User)null!);
         repository.Setup(x => x.SaveUser(It.IsAny<User>()))
             .Returns(Task.CompletedTask);
@@ -34,7 +34,7 @@ public class UserServiceTest
         await service.RegisterUser(command);
 
         //Assert
-        repository.Verify(r => r.GetByUserName("Test"), Times.Once);
+        repository.Verify(r => r.GetByUserNameAsync("Test"), Times.Once);
         repository.Verify(r => r.SaveUser(It.Is<User>(u =>
          u.Id == command.UserId &&
          u.UserName == command.UserName &&
@@ -61,7 +61,7 @@ public class UserServiceTest
         // Assert
         await act.Should().ThrowAsync<ValidationException>()
             .WithMessage("User Id must be positive");
-        repository.Verify(r => r.GetByUserName(It.IsAny<string>()), Times.Never);
+        repository.Verify(r => r.GetByUserNameAsync(It.IsAny<string>()), Times.Never);
         repository.Verify(r => r.SaveUser(It.IsAny<User>()), Times.Never);
     }
 
@@ -70,7 +70,7 @@ public class UserServiceTest
     {
         //Arrange
         var repository = new Mock<IUserRepository>();
-        repository.Setup(x => x.GetByUserName(It.IsAny<string>()))
+        repository.Setup(x => x.GetByUserNameAsync(It.IsAny<string>()))
             .ReturnsAsync(new User
              (  id: 1,
                 userName: "ChillGuy",
@@ -93,7 +93,7 @@ public class UserServiceTest
         //Assert
         await act.Should().ThrowAsync<ValidationException>()
             .WithMessage("This user already exist");
-        repository.Verify(x => x.GetByUserName("ChillGuy"), Times.Once);
+        repository.Verify(x => x.GetByUserNameAsync("ChillGuy"), Times.Once);
         repository.Verify(x => x.SaveUser(It.IsAny<User>()), Times.Never);
 
     }
@@ -102,7 +102,7 @@ public class UserServiceTest
     {
         //Arrange
         var repository = new Mock<IUserRepository>();
-        repository.Setup(x => x.GetByUserName(It.IsAny<string>()))
+        repository.Setup(x => x.GetByUserNameAsync(It.IsAny<string>()))
             .ReturnsAsync((User)null!);
 
         var service = new UserService(repository.Object);
@@ -120,7 +120,7 @@ public class UserServiceTest
         //Assert
         await act.Should().ThrowAsync<ValidationException>()
             .WithMessage("Password Length must be between 8 and 16 symbols");
-        repository.Verify(x => x.GetByUserName(It.IsAny<string>()), Times.Never);
+        repository.Verify(x => x.GetByUserNameAsync(It.IsAny<string>()), Times.Never);
         repository.Verify(x => x.SaveUser(It.IsAny<User>()), Times.Never);
 
     }

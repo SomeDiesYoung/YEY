@@ -5,13 +5,28 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using EventManager.Service.Models.Enums;
 namespace InMemoryEventRepositories
 {
     public class InMemoryEventSubscriptionRepository : IEventSubscriptionRepository
     {
-        private readonly List<EventSubscription> _subscriptions = new List<EventSubscription>();
-
+        private readonly List<EventSubscription> _subscriptions = new List<EventSubscription>
+        {
+          
+                new EventSubscription
+                { EventId = 1,
+                    UserId = 1,
+                    SubscriptionId = 1,
+                    Status = EventSubscriptionStatus.Active
+                },
+                new EventSubscription
+                { EventId = 2,
+                    UserId = 2,
+                    SubscriptionId = 2,
+                    Status = EventSubscriptionStatus.Active
+                }
+        };
+    
         public Task AddSubscription(EventSubscription subscription)
         {
             if (_subscriptions.Any(s => s.UserId == subscription.UserId && s.EventId == subscription.EventId))

@@ -3,7 +3,7 @@ namespace EventManager.Service.Services.Abstractions;
 
 public interface IUserRepository
 {
-    Task<User> GetById(int id);
-    Task<User> GetByUserName(string userName);
+    Task<User> GetByIdAsync(int id);
+    Task<User?> GetByUserNameAsync(string userName);
     Task SaveUser(User user);
 }
