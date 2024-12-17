@@ -56,6 +56,7 @@ internal class Program
         var subscriptionCommand = new EventSubscriptionCommand { EventId = 2 , UserId = 1 }; 
         var subscriptionCommand2 = new EventSubscriptionCommand { EventId = 2 , UserId = 1 };
         await EventSubscriptionService.SubscribeToEvent(subscriptionCommand2);
+        await EventSubscriptionService.UnSubscribeFromEvent(subscriptionCommand);
 
     }
 }

@@ -44,9 +44,9 @@ public class EventSubscriptionService
     public async Task UnSubscribeFromEvent(EventSubscriptionCommand command)
     {
         command.Validate();
-        var currentEvent = await _eventRepository.GetByIdAsync(command.EventId);
 
-        if (currentEvent.EnsureIsActive()) throw new DomainException("Event is not Active or Date is invalid");
+        var currentEvent = await _eventRepository.GetByIdAsync(command.EventId);
+        currentEvent.EnsureIsActive();
 
         await _eventSubscriptionRepository.RemoveSubscription(command.UserId, command.EventId);
     }
