@@ -56,17 +56,18 @@ internal class Program
 
 
 
-         static IServiceCollection RegisterServices()
-        {
-            var serviceCollection = new ServiceCollection();
-            serviceCollection.AddScoped<EventService>();
-            serviceCollection.AddScoped<IEventRepository, InMemoryEventRepository>();
-            serviceCollection.AddScoped<IUserRepository, InMemoryUserRepository>();
-            serviceCollection.AddScoped<IEventFilterService, EventFilterService>();
-            serviceCollection.AddScoped<IEventSubscriptionRepository, InMemoryEventSubscriptionRepository>();
-            serviceCollection.AddScoped<UserService>();
-            serviceCollection.AddScoped<EventSubscriptionService>();
-            return serviceCollection;
-        }
+        
+    }
+    public static IServiceCollection RegisterServices()
+    {
+        var serviceCollection = new ServiceCollection();
+        serviceCollection.AddScoped<EventService>();
+        serviceCollection.AddScoped<IEventRepository, InMemoryEventRepository>();
+        serviceCollection.AddScoped<IUserRepository, InMemoryUserRepository>();
+        serviceCollection.AddScoped<IEventFilterService, EventFilterService>();
+        serviceCollection.AddScoped<IEventSubscriptionRepository, InMemoryEventSubscriptionRepository>();
+        serviceCollection.AddScoped<UserService>();
+        serviceCollection.AddScoped<EventSubscriptionService>();
+        return serviceCollection;
     }
 }
