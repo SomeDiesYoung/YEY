@@ -5,7 +5,7 @@ using EventManager.Service.Models.Enums;
 using EventManager.Service.Services.Abstractions;
 using EventManager.Service.Validations;
 
-namespace EventManager.Service.Services.Inplementations;
+namespace EventManager.Service.Services.Implementations;
 
 public class EventSubscriptionService
 {

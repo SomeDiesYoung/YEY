@@ -1,9 +1,10 @@
 ﻿using EventManager.Service.Exceptions;
 using EventManager.Service.Models;
+using EventManager.Service.Services.Abstractions;
 
 namespace EventManager.Service.Commands;
 
-public class EventSubscriptionCommand
+public class EventSubscriptionCommand : ICommands
 {
     public int UserId { get; set; }
     public int EventId { get; set; }

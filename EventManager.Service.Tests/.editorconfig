@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# CA1866: Use char overload
+dotnet_diagnostic.CA1866.severity = none

@@ -1,8 +1,9 @@
 ﻿using EventManager.Service.Exceptions;
+using EventManager.Service.Services.Abstractions;
 
 namespace EventManager.Service.Commands;
 
-public class ActivateEventCommand
+public class ActivateEventCommand : ICommands
 {
     public int EventId { get; set; }
     public DateTime StartDate { get; set; }

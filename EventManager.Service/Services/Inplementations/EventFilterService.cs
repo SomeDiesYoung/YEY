@@ -19,7 +19,7 @@ public class EventFilterService : IEventFilterService
  
     public async Task<Event?> FilterByIdAsync(int id)
     {
-        var eventItem = await _eventRepository.GetByIdAsync(id);
+        var eventItem = await _eventRepository.GetByIdOrDefaultAsync(id);
 
         return await Task.FromResult(eventItem);
     }
@@ -30,7 +30,7 @@ public class EventFilterService : IEventFilterService
         if (string.IsNullOrWhiteSpace(name))
             throw new ValidationException("Event name cannot be null or empty.");
 
-        var events = await _eventRepository.GetAllAsync();
+        var events = await _eventRepository.ListAsync();
         
         
         var filteredEvents = events
@@ -46,7 +46,7 @@ public class EventFilterService : IEventFilterService
 
     public async Task<IEnumerable<Event?>> FilterByEventStatusAndDateAsync(DateTime startDate)
     {
-        var events = await _eventRepository.GetAllAsync();
+        var events = await _eventRepository.ListAsync();
         var filteredEvents = events.Where(e=>e.StartDate == startDate)
             .Where(e => e.EnsureIsActive());
 

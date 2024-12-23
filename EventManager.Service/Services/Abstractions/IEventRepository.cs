@@ -5,9 +5,10 @@ namespace EventManager.Service.Services.Abstractions
     {
         Task<Event> GetByIdAsync(int Id);
         Task<Event?> GetByIdOrDefaultAsync(int Id);
-        Task<Event?> GetByNameAsync(string Name);
-        Task<IEnumerable<Event>> GetAllAsync(); 
-        Task<Event?> GetByFullName(string name);
-        Task SaveEventAsync(Event Event);
+        Task<Event?> GetByNameAsync(string name);
+        Task<List<Event>> ListAsync(); 
+        Task<int> CreateAsync(Event Event);
+        Task UpdateAsync(Event Event);
+        Task<bool> Exists(string name , DateTime startDate , DateTime endDate);
     }
 }

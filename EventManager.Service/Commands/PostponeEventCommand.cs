@@ -1,8 +1,9 @@
 ﻿using EventManager.Service.Exceptions;
+using EventManager.Service.Services.Abstractions;
 
 namespace EventManager.Service.Commands;
 
-public class PostponeEventCommand
+public class PostponeEventCommand : ICommands
 {
     public int EventId { get; set; }
     public DateTime? StartDate { get; set; }

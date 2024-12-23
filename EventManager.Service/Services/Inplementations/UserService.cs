@@ -2,9 +2,8 @@
 using EventManager.Service.Commands;
 using EventManager.Service.Services.Abstractions;
 using EventManager.Service.Exceptions;
-namespace EventManager.Service.Services.Inplementations;
-
-public class UserService
+namespace EventManager.Service.Services.Implementations;
+public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
 	public UserService (IUserRepository userRepository)
@@ -12,19 +11,18 @@ public class UserService
 		_userRepository = userRepository;
 	}
 
-	public async Task RegisterUser(UserCommand command)
+	public async Task<int> ExecuteAsync(RegisterUserCommand command)
 	{
 		command.Validate();
-		var existingUser = await _userRepository.GetByUserNameAsync(command.UserName);
+		var existingUser = await _userRepository.GetByNameAsync(command.UserName);
 		if (existingUser != null) throw new ValidationException("This user already exist");
 
 		var NewUser = new User
 		(
-			id : command.UserId,
 			userName : command.UserName,
 			email : command.Email,
 			password : command.Password
 		);
-       await _userRepository.SaveUser(NewUser);
+      return await _userRepository.CreateAsync(NewUser);
     }
 }

@@ -1,20 +1,30 @@
-﻿using EventManager.Service.Models.Enums;
+﻿using EventManager.Service.Models.Abstraction;
+using EventManager.Service.Models.Enums;
 using EventManager.Service.Validations;
 
 namespace EventManager.Service.Models;
-
-public class Event
+public class Event : DomainEntity<int>
 {
-    public int Id {  get; set; }
-    public required string Name { get; set; } 
-    public required string Description { get; set; } 
-    public DateTime? StartDate { get; set; } 
-    public DateTime? EndDate { get; set; } 
-    public TimeSpan? Duration { get; set; } 
-    public required string Location { get; set; }
-    public EventStatus Status { get; set; } = EventStatus.Active;
+    public string Name { get; private set; } 
+    public string Description { get; private set; } 
+    public DateTime? StartDate { get; private set; } 
+    public DateTime? EndDate { get; private set; } 
+    public TimeSpan? Duration { get; private set; } 
+    public string Location { get; private set; }
+    public EventStatus Status { get; private set; } = EventStatus.Active;
 
- 
+
+
+    public Event(string name, string description, DateTime? startDate, DateTime? endDate, TimeSpan? duration, string location, EventStatus status)
+    {
+        Name = name;
+        Description = description;
+        StartDate = startDate;
+        EndDate = endDate;
+        Duration = duration;
+        Location = location;
+        Status = status;
+    }
 
     public void Activate(DateTime startDate, DateTime endDate)
     {
@@ -36,5 +46,3 @@ public class Event
     }
 
 }
-
- 

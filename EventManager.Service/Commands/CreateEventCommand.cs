@@ -4,13 +4,26 @@ using EventManager.Service.Services.Abstractions;
 
 namespace EventManager.Service.Commands;
 
-public class CreateEventCommand : EventCommand
+public class CreateEventCommand : ICommands
 {
-    public override EventStatus Status
+    public int EventId { get; set; }
+    public required string Name { get; set; }
+    public required string Description { get; set; }
+    public DateTime StartDate { get; set; }
+    public DateTime EndDate { get; set; }
+    public TimeSpan Duration { get; set; }
+    public required string Location { get; set; }
+    public  EventStatus Status { get;} = EventStatus.Active;
+
+
+    public  void Validate()
     {
-        get => EventStatus.Active; 
+        if (EventId <= 0) throw new ValidationException("Event Id must be positive");
+        if (Name.Length < 1 || Name.Length > 100 || string.IsNullOrWhiteSpace(Name)) throw new ValidationException("Name length must be between 1 and 100 chars");
+        if (Description.Length < 1 || Description.Length > 4000 || string.IsNullOrWhiteSpace(Description)) throw new ValidationException("Description text length must be between 1 and 4000 chars");
+        if (Location.Length < 1 || Location.Length > 4000 || string.IsNullOrWhiteSpace(Location)) throw new ValidationException("Location length must be between 1 and 4000 chars");
     }
-    public override void ValidateDateAndDuration()
+    public  void ValidateDateAndDuration()
     {
         if (StartDate < DateTime.Now)
         {
@@ -22,10 +35,5 @@ public class CreateEventCommand : EventCommand
         }
         Duration = EndDate - StartDate;
     }
-    public async Task<bool> EventExist(IEventRepository eventRepository)
 
-    {
-        
-        return (await eventRepository.GetByFullName(Name) != null && await eventRepository.GetByIdAsync(EventId) != null);
-    }
 }

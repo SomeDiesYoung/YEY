@@ -10,7 +10,7 @@ public class UserCommandTest
     public void UserCommand_ShouldThrowException_WhenIdIsFilledIncorrectly()
     {
         //Arrange
-        var command = new UserCommand
+        var command = new RegisterUserCommand
         {
             UserId = -1,
             UserName = "Test",
@@ -28,7 +28,7 @@ public class UserCommandTest
     public void UserCommand_ShouldThrowException_WhenNameIsWhitespace()
     {
         //Arrange
-        var command = new UserCommand
+        var command = new RegisterUserCommand
         {
             UserId = 1,
             UserName = "     ",
@@ -47,7 +47,7 @@ public class UserCommandTest
     public void UserCommand_ShouldThrowException_WhenEmailFilledIncorrectly()
     {
         //Arrange
-        var command = new UserCommand
+        var command = new RegisterUserCommand
         {
             UserId = 1,
             UserName = "wgberv",

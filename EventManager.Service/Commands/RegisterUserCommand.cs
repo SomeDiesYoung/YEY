@@ -1,17 +1,19 @@
 ﻿using EventManager.Service.Exceptions;
+using EventManager.Service.Models;
+using EventManager.Service.Services.Abstractions;
 using EventManager.Service.Validations;
 namespace EventManager.Service.Commands;
 
-public class UserCommand
+public class RegisterUserCommand  : ICommands
 {
-    public int UserId { get; set; }
+    //public int UserId { get; set; }
     public required string UserName { get; set; }
     public required string Password { get; set; }
     public required string Email { get; set; }
 
     public void Validate()
     {
-        if (UserId <= 0) throw new ValidationException("User Id must be positive");
+        //if (UserId <= 0) throw new ValidationException("User Id must be positive");
         if (UserName.Length < 1 || UserName.Length > 150 || string.IsNullOrWhiteSpace(UserName)) throw new ValidationException("User Name Length must be between 1 and 150 chars");
         Email.ValidateEmail();
       
