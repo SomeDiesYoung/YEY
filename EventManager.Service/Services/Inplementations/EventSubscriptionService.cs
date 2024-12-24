@@ -33,10 +33,8 @@ public class EventSubscriptionService : IEventSubscriptionService
 
         var currentUser = await _userRepository.GetByIdAsync(command.UserId);
 
-        if (await _eventSubscriptionRepository.Exists(command.EventId, command.UserId))
-            return Guid.Empty;
+        if (await _eventSubscriptionRepository.Exists(command.EventId, command.UserId)) throw new AlreadyExistsException("Subscription already exists for this event and user");
 
-        //TODO : Vkitxo lekqors ra jobia Guid.Empty Tu null  
 
         var NewSubscription = new EventSubscription
         {

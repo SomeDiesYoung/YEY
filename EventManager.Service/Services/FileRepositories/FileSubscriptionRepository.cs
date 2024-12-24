@@ -55,19 +55,35 @@ public class FileSubscriptionRepository : IEventSubscriptionRepository
 
 
     #region Public Methods
-    public Task<bool> Exists(int eventId, int userId)
+    public async Task<bool> Exists(int eventId, int userId)
     {
-        throw new NotImplementedException();
+          return await Task.FromResult( _entities.Exists((e)=> e.UserId == userId && e.EventId== eventId));
     }
 
-    public Task GetByIdAsync(Guid id)
+    public async Task<EventSubscription> GetByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+       return await GetByIdOrDefaultAsync(id) ?? throw new NotFoundException("EventSubscription with this identifier Is not found");
+    }
+    public Task<EventSubscription?> GetByIdOrDefaultAsync(Guid id)
+    {
+        var subscription =  _entities.FirstOrDefault((e)=> e.Id.Equals(id));
+        return Task.FromResult(subscription);
+
     }
 
-    public Task DeleteAsync(int userId, int eventId)
+    public async Task DeleteAsync(int userId, int eventId)
     {
-        throw new NotImplementedException();
+        var subscription = _entities.FirstOrDefault(e => e.UserId == userId && e.EventId == eventId);
+
+        if (subscription == null)
+        {
+            throw new NotFoundException($"Subscription for user {userId} and event {eventId} not found.");
+        }
+
+        _entities.Remove(subscription);
+        SaveSubsptionsInFile();
+
+        await Task.CompletedTask; 
     }
     public async Task<Guid> CreateAsync(EventSubscription Subscription)
     {

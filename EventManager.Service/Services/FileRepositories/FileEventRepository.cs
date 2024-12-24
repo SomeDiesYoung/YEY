@@ -16,7 +16,7 @@ public sealed class FileEventRepository : IEventRepository
     #endregion Private Fields
 
 
-
+    #region Constructors
     /// <summary>
     /// Constructor
     /// Auto Loading Entities From Files
@@ -27,7 +27,10 @@ public sealed class FileEventRepository : IEventRepository
         _sequenceProvider = sequenceProvider;
         _entities = LoadEntityFromFile();
     }
+    #endregion Constructors
 
+
+    #region Public Methods
 
     public async Task<Event> GetByIdAsync(int Id)
     {
@@ -54,9 +57,9 @@ public sealed class FileEventRepository : IEventRepository
         throw new NotImplementedException(); //TODO : Realizacia davwero API dashenebis mere
     }
 
-    public  Task<bool> Exists(string name, DateTime startDate, DateTime endDate)
+    public async Task<bool> Exists(string name, DateTime startDate, DateTime endDate)
     {
-        return  Task.FromResult(_entities.Exists((e) => e.Name == name && e.StartDate == startDate && e.EndDate == endDate));
+        return await Task.FromResult(_entities.Exists((e) => e.Name == name && e.StartDate == startDate && e.EndDate == endDate));
     }
 
     public async Task<int> CreateAsync(Event @event)
@@ -76,6 +79,7 @@ public sealed class FileEventRepository : IEventRepository
         return Task.CompletedTask;
 
     }
+    #endregion Public Methods
 
     #region Private Methods
     private List<Event> LoadEntityFromFile()
