@@ -8,12 +8,18 @@ using EventManager.Service.Services.Abstractions;
 namespace EventManager.Service.Services.Implementations;
 public class EventService : IEventService
 {
+    #region Private Fields
     private readonly IEventRepository _eventRepository;
+    #endregion Private Fields
+
+    #region Constructors
     public EventService(IEventRepository eventRepository)
     {
         _eventRepository = eventRepository;
     }
+    #endregion  Constructors
 
+    #region Public Methods
     public async Task<int> ExecuteAsync(CreateEventCommand command)
     {
         command.Validate();
@@ -21,8 +27,7 @@ public class EventService : IEventService
 
         if (await _eventRepository.Exists(command.Name,command.StartDate,command.EndDate)) throw new DomainException("Event already exist");
 
-        var newEvent = new Event
-        (
+        var newEvent = new Event(
             name : command.Name,
             description : command.Description,
             startDate : command.StartDate,
@@ -58,10 +63,11 @@ public class EventService : IEventService
     }
     public async Task ExecuteAsync(CancelEventCommand command)
     {
-        var eventForCancell = await _eventRepository.GetByIdAsync(command.Id)
+        var eventForCancell = await _eventRepository.GetByIdAsync(command.EventId)
             ?? throw new NotFoundException("Event With this Id is not found");
         eventForCancell.Cancel();
 
         await _eventRepository.UpdateAsync(eventForCancell);
     }
+    #endregion Public Mehtods
 }

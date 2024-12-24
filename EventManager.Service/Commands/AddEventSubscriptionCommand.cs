@@ -3,7 +3,7 @@ using EventManager.Service.Services.Abstractions;
 
 namespace EventManager.Service.Commands;
 
-public abstract class UpdateEventStatusCommandBase : ICommands
+public abstract class UpdateEventSubscribrtionStatusCommandBase : ICommands
 {   
     public int UserId { get; set; }
     public int EventId { get; set; }
@@ -16,6 +16,6 @@ public abstract class UpdateEventStatusCommandBase : ICommands
 
     }
 }
-public sealed class AddEventSubscriptionCommand : UpdateEventStatusCommandBase
+public sealed class AddEventSubscriptionCommand : UpdateEventSubscribrtionStatusCommandBase
 {
 }

@@ -6,29 +6,37 @@ using EventManager.Service.Services.Abstractions;
 using EventManager.Service.Validations;
 
 namespace EventManager.Service.Services.Implementations;
-
-public class EventSubscriptionService
+public class EventSubscriptionService : IEventSubscriptionService
 {
+    #region Private Fields
     private readonly IEventRepository _eventRepository;
     private readonly IEventSubscriptionRepository _eventSubscriptionRepository;
     private readonly IUserRepository _userRepository;
+    #endregion Private Fields
 
+    #region Constructor
     public EventSubscriptionService(IEventSubscriptionRepository eventSubscriptionRepository, IEventRepository eventRepository, IUserRepository userRepository)
     {
         _eventSubscriptionRepository = eventSubscriptionRepository;
         _eventRepository = eventRepository;
         _userRepository = userRepository;
     }
+    #endregion Constructor
 
-    public async Task SubscribeToEvent(AddEventSubscriptionCommand command)
+    #region Public Methods
+    public async Task<Guid> ExecuteAsync(AddEventSubscriptionCommand command)
     {
         command.Validate();
+
         var currentEvent = await _eventRepository.GetByIdAsync(command.EventId);
-        var cuurentUser = await _userRepository.GetByIdAsync(command.UserId);
-        currentEvent.EnsureIsActive();
+                currentEvent.EnsureIsActive();
+
+        var currentUser = await _userRepository.GetByIdAsync(command.UserId);
 
         if (await _eventSubscriptionRepository.Exists(command.EventId, command.UserId))
-            return;
+            return Guid.Empty;
+
+        //TODO : Vkitxo lekqors ra jobia Guid.Empty Tu null  
 
         var NewSubscription = new EventSubscription
         {
@@ -37,17 +45,17 @@ public class EventSubscriptionService
             UserId = command.UserId,
         };
 
-       await _eventSubscriptionRepository.Create(NewSubscription); 
+      return (await _eventSubscriptionRepository.CreateAsync(NewSubscription)); 
 
     }
-
-    public async Task UnSubscribeFromEvent(AddEventSubscriptionCommand command)
+    public async Task ExecuteAsync(RemoveEventSubscriptionCommand command)
     {
         command.Validate();
 
         var currentEvent = await _eventRepository.GetByIdAsync(command.EventId);
         currentEvent.EnsureIsActive();
 
-        await _eventSubscriptionRepository.Delete(command.UserId, command.EventId);
+        await _eventSubscriptionRepository.DeleteAsync(command.UserId, command.EventId);
     }
+    #endregion Public Methods
 }

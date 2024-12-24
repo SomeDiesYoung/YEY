@@ -14,7 +14,7 @@ public sealed class FileUserRepository : IUserRepository
     #endregion Private Fields
 
 
-    #region Constructor
+    #region Constructors
     /// <summary>
     /// Constructor
     /// Auto Loading Entities From Files
@@ -25,7 +25,7 @@ public sealed class FileUserRepository : IUserRepository
         _sequenceProvider = sequenceProvider;
         _entities = LoadEntityFromFile();
     }
-    #endregion  Constructor
+    #endregion  Constructors
 
 
     #region Public Methods
@@ -59,6 +59,10 @@ public sealed class FileUserRepository : IUserRepository
         _entities[index] = user;
         SaveUsersInFile();
         return Task.CompletedTask;
+    }
+    public Task<bool> Exists(int Id)
+    {
+        return Task.FromResult(_entities.Exists((e) => e.Id.Equals(Id)));
     }
 
     #endregion Public Methods

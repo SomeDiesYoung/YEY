@@ -9,14 +9,19 @@ namespace EventManager.Service.Services.Implementations;
 
 public class EventFilterService : IEventFilterService
 {
+    #region Private Fields
     private readonly IEventRepository _eventRepository;
+    #endregion Private Fields
 
+    #region Constructors
     public EventFilterService(IEventRepository eventRepository)
     {
         _eventRepository = eventRepository;
     }
+    #endregion  Constructors
 
- 
+    #region Public Methods
+
     public async Task<Event?> FilterByIdAsync(int id)
     {
         var eventItem = await _eventRepository.GetByIdOrDefaultAsync(id);
@@ -26,15 +31,15 @@ public class EventFilterService : IEventFilterService
 
     public async Task<IEnumerable<Event>> FilterByNameAsync(string name)
     {
-        
+
         if (string.IsNullOrWhiteSpace(name))
             throw new ValidationException("Event name cannot be null or empty.");
 
         var events = await _eventRepository.ListAsync();
-        
-        
+
+
         var filteredEvents = events
-           .Where(e=> e.EnsureIsActive())
+           .Where(e => e.EnsureIsActive())
            .Where(e => e.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
            .ToList();
 
@@ -47,7 +52,7 @@ public class EventFilterService : IEventFilterService
     public async Task<IEnumerable<Event?>> FilterByEventStatusAndDateAsync(DateTime startDate)
     {
         var events = await _eventRepository.ListAsync();
-        var filteredEvents = events.Where(e=>e.StartDate == startDate)
+        var filteredEvents = events.Where(e => e.StartDate == startDate)
             .Where(e => e.EnsureIsActive());
 
         if (!filteredEvents.Any())
@@ -64,6 +69,5 @@ public class EventFilterService : IEventFilterService
     //        throw new NotFoundException("No events found.");
 
     //    return await Task.FromResult(events);}
+    #endregion Public Methods
 }
-
-
