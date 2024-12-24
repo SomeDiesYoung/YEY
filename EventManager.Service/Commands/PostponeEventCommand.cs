@@ -2,19 +2,15 @@
 using EventManager.Service.Services.Abstractions;
 
 namespace EventManager.Service.Commands;
-
-public class PostponeEventCommand : ICommands
+public sealed class PostponeEventCommand : EventStatusUpdateCommandBase, ICommands
 {
-    public int EventId { get; set; }
+
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
 
-    public void Validate()
+    public override void Validate()
     {
-        if (EventId <= 0)
-        {
-            throw new ValidationException("EventId Can not be negative");
-        }
+        base.Validate();
         if (StartDate < DateTime.Now)
         {
             throw new ValidationException("Start date must be earlier than today");

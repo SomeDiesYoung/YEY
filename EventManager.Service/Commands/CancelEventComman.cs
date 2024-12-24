@@ -8,14 +8,5 @@ using System.Threading.Tasks;
 
 namespace EventManager.Service.Commands;
 
-public class CancelEventCommand : ICommands
-{
-    public int Id {get;set;}
-    public void Validate()
-    {
-        if (Id <= 0)
-        {
-            throw new ValidationException("Id must be positive");
-        }
-    }
+public sealed class CancelEventCommand : EventStatusUpdateCommandBase { 
 }

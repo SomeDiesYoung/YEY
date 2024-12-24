@@ -20,7 +20,7 @@ public class EventSubscriptionService
         _userRepository = userRepository;
     }
 
-    public async Task SubscribeToEvent(EventSubscriptionCommand command)
+    public async Task SubscribeToEvent(AddEventSubscriptionCommand command)
     {
         command.Validate();
         var currentEvent = await _eventRepository.GetByIdAsync(command.EventId);
@@ -37,17 +37,17 @@ public class EventSubscriptionService
             UserId = command.UserId,
         };
 
-       await _eventSubscriptionRepository.AddSubscription(NewSubscription); 
+       await _eventSubscriptionRepository.Create(NewSubscription); 
 
     }
 
-    public async Task UnSubscribeFromEvent(EventSubscriptionCommand command)
+    public async Task UnSubscribeFromEvent(AddEventSubscriptionCommand command)
     {
         command.Validate();
 
         var currentEvent = await _eventRepository.GetByIdAsync(command.EventId);
         currentEvent.EnsureIsActive();
 
-        await _eventSubscriptionRepository.RemoveSubscription(command.UserId, command.EventId);
+        await _eventSubscriptionRepository.Delete(command.UserId, command.EventId);
     }
 }
