@@ -22,52 +22,41 @@ public class EventFilterService : IEventFilterService
 
     #region Public Methods
 
-    public async Task<Event?> FilterByIdAsync(int id)
+    public async Task<Event?> GetFilteredByIdAsync(int id)
     {
         var eventItem = await _eventRepository.GetByIdOrDefaultAsync(id);
 
-        return await Task.FromResult(eventItem);
+        return eventItem; ;
     }
 
-    public async Task<IEnumerable<Event>> FilterByNameAsync(string name)
+    public async Task<IEnumerable<Event>> GetFilteredByNameAsync(string name)
     {
 
         if (string.IsNullOrWhiteSpace(name))
             throw new ValidationException("Event name cannot be null or empty.");
 
         var events = await _eventRepository.ListAsync();
-
-
         var filteredEvents = events
            .Where(e => e.EnsureIsActive())
            .Where(e => e.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
            .ToList();
 
-        if (!filteredEvents.Any())
-            throw new NotFoundException($"No events found with name '{name}'");
-
-        return await Task.FromResult(filteredEvents);
+        return filteredEvents.Any() ? filteredEvents : Enumerable.Empty<Event>();
     }
 
-    public async Task<IEnumerable<Event?>> FilterByEventStatusAndDateAsync(DateTime startDate)
+    public async Task<IEnumerable<Event>> GetFilteredByDateAsync(DateTime startDate)
     {
         var events = await _eventRepository.ListAsync();
-        var filteredEvents = events.Where(e => e.StartDate == startDate)
-            .Where(e => e.EnsureIsActive());
+        var filteredEvents = events.Where(e => e.StartDate.HasValue && e.StartDate.Value.Date == startDate.Date)
+            .Where(e => e.EnsureIsActive()).ToList();
 
-        if (!filteredEvents.Any())
-            throw new NotFoundException($"No events found which is Active in {startDate}");
-
-        return await Task.FromResult(filteredEvents);
+        return filteredEvents.Any() ? filteredEvents : Enumerable.Empty<Event>();
     }
 
-    //public async  Task<IEnumerable<Event>> GetAll()
-    //{
-    //    var events = await _eventRepository.GetAll();
-
-    //    if (!events.Any())
-    //        throw new NotFoundException("No events found.");
-
-    //    return await Task.FromResult(events);}
+    public async Task<IEnumerable<Event>> GetAll()
+    {
+        var events = await  _eventRepository.ListAsync();
+        return events;
+    }
     #endregion Public Methods
 }

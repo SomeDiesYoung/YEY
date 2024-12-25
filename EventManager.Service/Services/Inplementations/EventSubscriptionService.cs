@@ -48,12 +48,7 @@ public class EventSubscriptionService : IEventSubscriptionService
     }
     public async Task ExecuteAsync(RemoveEventSubscriptionCommand command)
     {
-        command.Validate();
-
-        var currentEvent = await _eventRepository.GetByIdAsync(command.EventId);
-        currentEvent.EnsureIsActive();
-
-        await _eventSubscriptionRepository.DeleteAsync(command.UserId, command.EventId);
+        await _eventSubscriptionRepository.DeleteAsync(command.Id);
     }
     #endregion Public Methods
 }

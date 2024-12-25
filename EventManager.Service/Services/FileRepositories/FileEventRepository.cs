@@ -38,28 +38,27 @@ public sealed class FileEventRepository : IEventRepository
         return eventItem == null ? throw new NotFoundException("Event with this id is not found") : eventItem;
     }
 
-    public async Task<Event?> GetByIdOrDefaultAsync(int Id)
+    public  Task<Event?> GetByIdOrDefaultAsync(int Id)
     {
-       var @event = _entities.FirstOrDefault(e => e.Id.CompareTo(Id)==0);
-        return await Task.FromResult(@event);
+       var @event =  _entities.FirstOrDefault(e => e.Id.CompareTo(Id)==0);
+        return  Task.FromResult(@event);
 
-       //TODO : Vkitxo lektors Tu mchirdeba aq async/await Radgan Metodi aravis elodeba da damatebiTi damdzimeba zedmetia?
        
     }
 
-    public async Task<Event?> GetByNameAsync(string name)
+    public  Task<Event?> GetByNameAsync(string name)
     {
-        return await Task.FromResult(_entities.FirstOrDefault(e => e.Name.ToLower().Contains(name.ToLower(), StringComparison.OrdinalIgnoreCase)));
+        return  Task.FromResult(_entities.FirstOrDefault(e => e.Name.ToLower().Contains(name.ToLower(), StringComparison.OrdinalIgnoreCase)));
     }
 
-    public Task<List<Event>> ListAsync()
+    public  Task<List<Event>> ListAsync()
     {
-        throw new NotImplementedException(); //TODO : Realizacia davwero API dashenebis mere
+        return  Task.FromResult(_entities);
     }
 
-    public async Task<bool> Exists(string name, DateTime startDate, DateTime endDate)
+    public Task<bool> Exists(string name, DateTime startDate, DateTime endDate)
     {
-        return await Task.FromResult(_entities.Exists((e) => e.Name == name && e.StartDate == startDate && e.EndDate == endDate));
+        return Task.FromResult(_entities.Exists((e) => e.Name == name && e.StartDate == startDate && e.EndDate == endDate));
     }
 
     public async Task<int> CreateAsync(Event @event)

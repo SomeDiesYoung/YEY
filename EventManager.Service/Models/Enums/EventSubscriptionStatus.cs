@@ -2,6 +2,6 @@
 
 public enum EventSubscriptionStatus
 {
-    Active,
-    Inactive
+    Active = 10,
+    Inactive = 20
 }

@@ -33,8 +33,7 @@ public class EventService : IEventService
             startDate : command.StartDate,
             endDate : command.EndDate,
             duration : command.EndDate - command.StartDate,
-            location : command.Location,
-            status : command.Status
+            location : command.Location
         );
        return await _eventRepository.CreateAsync(newEvent);
     }

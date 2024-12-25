@@ -26,7 +26,7 @@ public class FileSubscriptionRepository : IEventSubscriptionRepository
 
     #region Private Methods
     private List<EventSubscription> LoadEntitiesFromFile()
-    {
+     {
         if (!File.Exists(FilePath))
         {
             return new List<EventSubscription>();
@@ -55,9 +55,9 @@ public class FileSubscriptionRepository : IEventSubscriptionRepository
 
 
     #region Public Methods
-    public async Task<bool> Exists(int eventId, int userId)
+    public  Task<bool> Exists(int eventId, int userId)
     {
-          return await Task.FromResult( _entities.Exists((e)=> e.UserId == userId && e.EventId== eventId));
+          return  Task.FromResult( _entities.Exists((e)=> e.UserId == userId && e.EventId== eventId));
     }
 
     public async Task<EventSubscription> GetByIdAsync(Guid id)
@@ -71,13 +71,13 @@ public class FileSubscriptionRepository : IEventSubscriptionRepository
 
     }
 
-    public async Task DeleteAsync(int userId, int eventId)
+    public async Task DeleteAsync(Guid id)
     {
-        var subscription = _entities.FirstOrDefault(e => e.UserId == userId && e.EventId == eventId);
+        var subscription = _entities.FirstOrDefault(e => e.Id.CompareTo(id)==0);
 
         if (subscription == null)
         {
-            throw new NotFoundException($"Subscription for user {userId} and event {eventId} not found.");
+            throw new NotFoundException($"Subscription with Id : {id} is not found.");
         }
 
         _entities.Remove(subscription);

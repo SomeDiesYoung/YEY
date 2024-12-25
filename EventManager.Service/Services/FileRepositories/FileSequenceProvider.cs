@@ -7,7 +7,7 @@ public sealed class FileSequenceProvider : ISequenceProvider
 {
 
     #region Private Fields
-    private const string FilePath = "sequence.json";///
+    private const string FilePath = "sequence.json";
     private static readonly ConcurrentDictionary<string, long>? Sequences = new();
     #endregion Private Fields
 
@@ -28,7 +28,7 @@ public sealed class FileSequenceProvider : ISequenceProvider
             File.WriteAllTextAsync(FilePath, JsonSerializer.Serialize(Sequences));
 
         }
-    } // TODO : Read Async rom gavxado azri ar aqvs radgan static construqtoria , da meshinia Thread race ar moxdes 
+    } 
     #endregion Constructors
 
     public Task<int> GetNextIntAsync(string SequenceType)

@@ -15,7 +15,7 @@ public class Event : DomainEntity<int>
 
 
 
-    public Event(string name, string description, DateTime? startDate, DateTime? endDate, TimeSpan? duration, string location, EventStatus status)
+    public Event(string name, string description, DateTime? startDate, DateTime? endDate, TimeSpan? duration, string location)
     {
         Name = name;
         Description = description;
@@ -23,7 +23,6 @@ public class Event : DomainEntity<int>
         EndDate = endDate;
         Duration = duration;
         Location = location;
-        Status = status;
     }
 
     public void Activate(DateTime startDate, DateTime endDate)

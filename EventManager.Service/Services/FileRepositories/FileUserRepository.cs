@@ -30,19 +30,19 @@ public sealed class FileUserRepository : IUserRepository
 
     #region Public Methods
 
-    public async Task<User?> GetByIdOrDefaultAsync(int Id)
+    public  Task<User?> GetByIdOrDefaultAsync(int Id)
     {
         var user = _entities.FirstOrDefault(e => e.Id.CompareTo(Id) == 0);
-        return await Task.FromResult(user);
+        return  Task.FromResult(user);
     }
     public async Task<User> GetByIdAsync(int Id)
     {
         var user = await GetByIdOrDefaultAsync(Id);
         return user == null ? throw new NotFoundException("User with this id is not found") : user;
     }
-    public async Task<User?> GetByNameAsync(string name)
+    public  Task<User?> GetByNameAsync(string name)
     {
-        return await Task.FromResult(_entities.FirstOrDefault(e => e.UserName.ToLower().Contains(name.ToLower(), StringComparison.OrdinalIgnoreCase)));
+        return  Task.FromResult(_entities.FirstOrDefault(e => e.UserName.ToLower().Contains(name.ToLower(), StringComparison.OrdinalIgnoreCase)));
     }
     public async Task<int> CreateAsync(User user)
     {

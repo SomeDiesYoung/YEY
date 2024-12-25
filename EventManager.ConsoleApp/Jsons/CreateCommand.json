@@ -1,12 +1,11 @@
 [
   {
-    "EventId": 1,
-    "Name": "test",
+    "Name": "test5",
     "Description": "test description",
     "StartDate": "2026-11-03",
     "EndDate": "2026-12-20",
     "Location": "MyBackyard",
-    "Status": 20
+    "Status": 10
   },
   {
     "EventId": 2,

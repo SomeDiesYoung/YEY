@@ -17,6 +17,17 @@ internal class Program
         var eventService = serviceProvider.GetRequiredService<IEventService>();
         var userService = serviceProvider.GetRequiredService<IUserService>();
         var subscriptionService = serviceProvider.GetRequiredService<IEventSubscriptionService>();
+        var filterService = serviceProvider.GetRequiredService<IEventFilterService>();
+
+        //var byid = await filterService.FilterByIdAsync(1);
+        //var date = DateTime.Parse("2000-12-12");
+        //var some = await filterService.FilterByEventStatusAndDateAsync(date);
+        //var date1 = DateTime.Parse("2026-11-3");
+        //var some1 = await filterService.FilterByEventStatusAndDateAsync(date1);
+
+        //var some3 = await filterService.GetFilteredByNameAsync("n");
+        //var some4 = await filterService.GetFilteredByNameAsync("tes");
+        //var some5 = await filterService.GetFilteredByNameAsync(null);
 
 
 
@@ -37,9 +48,9 @@ internal class Program
         //await eventService.ExecuteAsync(CreateEventCommands[0]);
         //await eventService.ExecuteAsync(ActivateEventCommands[0]);
         //await eventService.ExecuteAsync(PostponeEventCommands[0]);
-         //await eventService.ExecuteAsync(CanselEvents[0]);
+        //await eventService.ExecuteAsync(CanselEvents[0]);
 
-        
+
 
         var userJson = File.ReadAllText("G:\\C#projects\\GEOLAB\\Ehhhh\\YEY\\EventManager.ConsoleApp\\Jsons\\Users.json");
         var userCommands = JsonSerializer.Deserialize<List<RegisterUserCommand>>(userJson);
@@ -53,8 +64,8 @@ internal class Program
         var subscriptionCommand = new AddEventSubscriptionCommand { EventId = 2, UserId = 1 };
         await subscriptionService.ExecuteAsync(subscriptionCommand);
 
-        var subscriptionCommand2 = new RemoveEventSubscriptionCommand { EventId = 2, UserId = 1 };
-        await subscriptionService.ExecuteAsync(subscriptionCommand2);
+        //var subscriptionCommand2 = new RemoveEventSubscriptionCommand { EventId = 2, UserId = 1 };
+       // await subscriptionService.ExecuteAsync(subscriptionCommand2);
 
 
 

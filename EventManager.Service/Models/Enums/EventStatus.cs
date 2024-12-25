@@ -2,7 +2,7 @@
 
 public enum EventStatus
 {
-    Active =10,
-    Postponed =20,
-    Cancelled =30
+    Active = 10,
+    Postponed = 20,
+    Cancelled = 99
 }
