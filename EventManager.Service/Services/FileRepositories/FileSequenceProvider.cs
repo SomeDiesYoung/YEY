@@ -31,7 +31,7 @@ public sealed class FileSequenceProvider : ISequenceProvider
     } 
     #endregion Constructors
 
-    public Task<int> GetNextIntAsync(string SequenceType)
+    public Task<int> GetNextInt(string SequenceType)
     {
         if (string.IsNullOrEmpty(SequenceType)) throw new ArgumentException("Sequence name must be given", nameof(SequenceType));
 

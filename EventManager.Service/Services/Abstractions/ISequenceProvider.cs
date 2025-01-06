@@ -2,5 +2,5 @@
 
 public interface ISequenceProvider
 {
-    Task<int> GetNextIntAsync(string sequenceType);
+    Task<int> GetNextInt(string sequenceType);
 }

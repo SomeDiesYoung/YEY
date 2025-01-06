@@ -4,7 +4,7 @@ namespace EventManager.Service.Services.Abstractions;
 public interface IUserRepository
 {
     Task<User> GetByIdAsync(int id);
-    Task<User?> GetByNameAsync(string userName);
+    Task<IEnumerable<User?>> GetAllByNameAsync(string userName);
     Task<User?> GetByIdOrDefaultAsync(int id);
     Task<int> CreateAsync(User user);
     Task<bool> Exists(int id);

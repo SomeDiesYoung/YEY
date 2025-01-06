@@ -44,7 +44,7 @@ public class EventService : IEventService
 
 
         var eventForActivate =  await _eventRepository.GetByIdAsync(command.EventId)
-            ?? throw new NotFoundException("Event With this Id is not found");
+            ?? throw new ObjectNotFoundException(command.EventId.ToString(),typeof(Event).ToString());
 
         eventForActivate.Activate(command.StartDate,command.EndDate);
         await _eventRepository.UpdateAsync(eventForActivate);
@@ -54,7 +54,7 @@ public class EventService : IEventService
         command.Validate();
 
         var eventForPostone =  await _eventRepository.GetByIdAsync(command.EventId)
-            ?? throw new NotFoundException("Event With this Id is not found");
+            ?? throw new ObjectNotFoundException(command.EventId.ToString(), typeof(Event).ToString());
 
         eventForPostone.Postpone(command.StartDate,command.EndDate);
         await _eventRepository.UpdateAsync(eventForPostone);
@@ -63,7 +63,7 @@ public class EventService : IEventService
     public async Task ExecuteAsync(CancelEventCommand command)
     {
         var eventForCancell = await _eventRepository.GetByIdAsync(command.EventId)
-            ?? throw new NotFoundException("Event With this Id is not found");
+            ?? throw new ObjectNotFoundException(command.EventId.ToString(), typeof(Event).ToString());
         eventForCancell.Cancel();
 
         await _eventRepository.UpdateAsync(eventForCancell);

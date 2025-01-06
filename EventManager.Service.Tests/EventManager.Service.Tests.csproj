@@ -23,7 +23,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EventManager.Service\EventManager.Service.csproj" />
-    <ProjectReference Include="..\InMemoryEventRepositories\InMemoryEventRepositories.csproj" />
   </ItemGroup>
 
   <ItemGroup>

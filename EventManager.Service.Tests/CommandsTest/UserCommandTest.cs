@@ -12,7 +12,6 @@ public class UserCommandTest
         //Arrange
         var command = new RegisterUserCommand
         {
-            UserId = -1,
             UserName = "Test",
             Password = "Test",
             Email = "Test"
@@ -30,7 +29,6 @@ public class UserCommandTest
         //Arrange
         var command = new RegisterUserCommand
         {
-            UserId = 1,
             UserName = "     ",
             Password = "afadgWRVREV",
             Email = "Test@gmail.com"
@@ -49,7 +47,6 @@ public class UserCommandTest
         //Arrange
         var command = new RegisterUserCommand
         {
-            UserId = 1,
             UserName = "wgberv",
             Password = "afadgWRVREV",
             Email = "Test!gmail.com"

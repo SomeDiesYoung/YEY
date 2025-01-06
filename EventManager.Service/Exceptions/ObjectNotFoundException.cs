@@ -4,13 +4,14 @@ namespace EventManager.Service.Exceptions;
 /// <summary>
 /// Not Found Exception
 /// </summary>
-public class NotFoundException : DomainException
+public class ObjectNotFoundException : DomainException
 {
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="message">Exception Message</param>
-    public NotFoundException(string message) : base(message) { }
+    public ObjectNotFoundException(string id, string objectType)
+        : base($"{objectType} with id: '{id}' not found") { }
 
 }

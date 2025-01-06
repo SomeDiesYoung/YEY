@@ -18,7 +18,7 @@ internal class Program
         var userService = serviceProvider.GetRequiredService<IUserService>();
         var subscriptionService = serviceProvider.GetRequiredService<IEventSubscriptionService>();
         var filterService = serviceProvider.GetRequiredService<IEventFilterService>();
-
+        var eventRepo = serviceProvider.GetRequiredService<IEventRepository>();
         //var byid = await filterService.FilterByIdAsync(1);
         //var date = DateTime.Parse("2000-12-12");
         //var some = await filterService.FilterByEventStatusAndDateAsync(date);
@@ -29,7 +29,7 @@ internal class Program
         //var some4 = await filterService.GetFilteredByNameAsync("tes");
         //var some5 = await filterService.GetFilteredByNameAsync(null);
 
-
+      var @event = await eventRepo.GetByIdAsync(2);
 
         var json = File.ReadAllText("G:\\C#projects\\GEOLAB\\Ehhhh\\YEY\\EventManager.ConsoleApp\\Jsons\\CreateCommand.json");
 

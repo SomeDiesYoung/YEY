@@ -21,7 +21,6 @@ public class CreateEventCommandTest
             Description = "Something",
             Location = "Somewhere",
             Name = "Name",
-            Status = EventStatus.Active
         };
 
         //Act
@@ -43,7 +42,6 @@ public class CreateEventCommandTest
             Description = "Something",
             Location = "Somewhere",
             Name = "Name",
-            Status = EventStatus.Active
         };
 
         //Act
@@ -70,7 +68,6 @@ public class CreateEventCommandTest
             Description = "Something",
             Location = "Somewhere",
             Name = "Name",
-            Status = EventStatus.Active,
         };
         //Act
         command.ValidateDateAndDuration();
@@ -93,7 +90,6 @@ public class CreateEventCommandTest
             Description = "Something",
             Location = "Somewhere",
             Name = "Name",
-            Status = EventStatus.Active,
         };
         //Act
         Action act = ()=> command.ValidateDateAndDuration();
@@ -115,14 +111,14 @@ public class CreateEventCommandTest
                          Description = "Name",
                          Location = "adsa",
                          Name = "Test Name",
-                         Status = EventStatus.Active};
+                         };
 
         var command = new CreateEventCommand
         {
             Description = "Name",
             Location = "adsa",
             Name = "Test Name",
-            Status = EventStatus.Active
+    
         };
 
         // Act
