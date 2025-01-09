@@ -1,6 +1,7 @@
 ﻿using EventManager.Service.Exceptions;
 using EventManager.Service.Models;
 using EventManager.Service.Services.Abstractions;
+using Microsoft.Extensions.Options;
 using System.Text.Json;
 
 namespace EventManager.Service.Services.FileRepositories;
@@ -9,7 +10,7 @@ public sealed class FileUserRepository : FileRepositoryBase<User,int>, IUserRepo
 {
     private readonly ISequenceProvider _sequenceProvider;
     
-    public FileUserRepository(ISequenceProvider sequenceProvider) : base("users.json")
+    public FileUserRepository(ISequenceProvider sequenceProvider,IOptions<FileStorageOptions> options) : base(options.Value.UserRepositoryPath)
     {
         _sequenceProvider = sequenceProvider;
     }
@@ -22,7 +23,7 @@ public sealed class FileUserRepository : FileRepositoryBase<User,int>, IUserRepo
         }
 
         var users = await ListAsync();
-        return users.Where(e => e.UserName?.Contains(name, StringComparison.OrdinalIgnoreCase) ?? false).ToList();
+        return users.Where(e => e.UserName.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
     }
 
     public async Task<bool> Exists(int id)

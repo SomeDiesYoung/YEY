@@ -28,7 +28,7 @@ public sealed class FileSequenceProvider : ISequenceProvider
             File.WriteAllTextAsync(FilePath, JsonSerializer.Serialize(Sequences));
 
         }
-    } 
+    }
     #endregion Constructors
 
     public Task<int> GetNextInt(string SequenceType)

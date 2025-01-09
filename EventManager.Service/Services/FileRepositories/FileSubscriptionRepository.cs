@@ -2,6 +2,7 @@
 using EventManager.Service.Exceptions;
 using EventManager.Service.Models;
 using EventManager.Service.Services.Abstractions;
+using Microsoft.Extensions.Options;
 using System.Collections.Concurrent;
 using System.Net.Http.Headers;
 using System.Text.Json;
@@ -12,7 +13,7 @@ public class FileSubscriptionRepository : FileRepositoryBase<EventSubscription, 
 {
     private readonly ISequenceProvider _sequenceProvider;
 
-    public FileSubscriptionRepository(ISequenceProvider sequenceProvider) : base("Subscriptions.json")
+    public FileSubscriptionRepository(ISequenceProvider sequenceProvider,IOptions<FileStorageOptions> options) : base(options.Value.SubscriptionRepositoryPath)
     {
         _sequenceProvider = sequenceProvider;
     }

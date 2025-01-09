@@ -1,3 +1,4 @@
+using EventManager.Service.Extensions;
 using EventManager.Service.Services.Abstractions;
 using EventManager.Service.Services.FileRepositories;
 
@@ -9,8 +10,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton<ISequenceProvider, FileSequenceProvider>();
-builder.Services.AddScoped<IEventRepository, FileEventRepository>();
+builder.Services.AddRepositories();
+builder.Services.AddServices();
+
+builder.Services.Configure<FileStorageOptions>(builder.Configuration.GetSection("FileStorageOptions"));
 
 var app = builder.Build();
 

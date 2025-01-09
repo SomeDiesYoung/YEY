@@ -18,7 +18,7 @@ public abstract class FileRepositoryBase<TEntity,TId>
     private readonly List<TEntity> _entities;
 
 
-    public FileRepositoryBase(string filePath)
+    protected FileRepositoryBase(string filePath)
     {
         _filePath = filePath;
         _entities = LoadEntitiesFromFile();

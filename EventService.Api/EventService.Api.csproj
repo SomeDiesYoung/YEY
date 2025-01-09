@@ -14,4 +14,8 @@
     <ProjectReference Include="..\EventManager.Service\EventManager.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="bin\Debug\net8.0\" />
+  </ItemGroup>
+
 </Project>

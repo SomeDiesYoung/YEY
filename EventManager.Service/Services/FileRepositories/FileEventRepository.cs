@@ -1,6 +1,7 @@
 ﻿using EventManager.Service.Exceptions;
 using EventManager.Service.Models;
 using EventManager.Service.Services.Abstractions;
+using Microsoft.Extensions.Options;
 using System.Text.Json;
 
 namespace EventManager.Service.Services.FileRepositories;
@@ -19,7 +20,7 @@ public sealed class FileEventRepository : FileRepositoryBase<Event,int>, IEventR
     /// Auto Loading Entities From Files
     /// </summary>
     /// <param name="sequenceProvider">Provider which is needed to work with concrete entity type</param>
-    public FileEventRepository(ISequenceProvider sequenceProvider) : base("Event.json")
+    public FileEventRepository(ISequenceProvider sequenceProvider ,IOptions<FileStorageOptions> options) : base(options.Value.EventRepositoryPath)
     {
         _sequenceProvider = sequenceProvider;
     }
