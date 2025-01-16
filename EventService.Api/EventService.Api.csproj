@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EventManager.Service\EventManager.Service.csproj" />
+    <ProjectReference Include="..\EventManager.FileRepository\EventManager.FileRepository.csproj" />
   </ItemGroup>
 
   <ItemGroup>

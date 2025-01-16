@@ -1,8 +1,9 @@
-﻿using EventManager.Service.Commands;
-using EventManager.Service.Models;
+﻿using EventManager.Domain.Abstractions;
+using EventManager.Domain.Commands;
+using EventManager.FileRepository.Abstractions;
+using EventManager.FileRepository.Implementations;
 using EventManager.Service.Services.Abstractions;
-using EventManager.Service.Services.FileRepositories;
-using EventManager.Service.Services.Implementations;
+using EventManager.Service.Services.Inplementations.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
 
@@ -29,7 +30,7 @@ internal class Program
         //var some4 = await filterService.GetFilteredByNameAsync("tes");
         //var some5 = await filterService.GetFilteredByNameAsync(null);
 
-      var @event = await eventRepo.GetByIdAsync(2);
+        var @event = await eventRepo.GetByIdAsync(2);
 
         var json = File.ReadAllText("G:\\C#projects\\GEOLAB\\Ehhhh\\YEY\\EventManager.ConsoleApp\\Jsons\\CreateCommand.json");
 
@@ -37,11 +38,11 @@ internal class Program
 
 
         //Event Service
-       var CreateEventCommands = JsonSerializer.Deserialize<List<CreateEventCommand>>(json);
+        var CreateEventCommands = JsonSerializer.Deserialize<List<CreateEventCommand>>(json);
         var UpdateEventCommands = JsonSerializer.Deserialize<List<CreateEventCommand>>(json);
         var ActivateEventCommands = JsonSerializer.Deserialize<List<ActivateEventCommand>>(json);
         var PostponeEventCommands = JsonSerializer.Deserialize<List<PostponeEventCommand>>(json);
-       var CanselEvents = JsonSerializer.Deserialize<List<CancelEventCommand>>(json);
+        var CanselEvents = JsonSerializer.Deserialize<List<CancelEventCommand>>(json);
 
         Console.WriteLine($"Current Directory: {Directory.GetCurrentDirectory()}");
 
@@ -55,7 +56,7 @@ internal class Program
         var userJson = File.ReadAllText("G:\\C#projects\\GEOLAB\\Ehhhh\\YEY\\EventManager.ConsoleApp\\Jsons\\Users.json");
         var userCommands = JsonSerializer.Deserialize<List<RegisterUserCommand>>(userJson);
 
-        
+
         //foreach (var user in userCommands)
         //{
         //    await userService.ExecuteAsync(user);
@@ -65,7 +66,7 @@ internal class Program
         await subscriptionService.ExecuteAsync(subscriptionCommand);
 
         //var subscriptionCommand2 = new RemoveEventSubscriptionCommand { EventId = 2, UserId = 1 };
-       // await subscriptionService.ExecuteAsync(subscriptionCommand2);
+        // await subscriptionService.ExecuteAsync(subscriptionCommand2);
 
 
 
@@ -74,14 +75,14 @@ internal class Program
     public static IServiceCollection RegisterServices()
     {
         var serviceCollection = new ServiceCollection();
-        serviceCollection.AddScoped<IEventService,EventService>();
+        serviceCollection.AddScoped<IEventService, EventService>();
         serviceCollection.AddScoped<IEventRepository, FileEventRepository>();
         serviceCollection.AddScoped<ISequenceProvider, FileSequenceProvider>();
-        serviceCollection.AddScoped<IUserService,UserService>();
+        serviceCollection.AddScoped<IUserService, UserService>();
         serviceCollection.AddScoped<IUserRepository, FileUserRepository>();
         serviceCollection.AddScoped<IEventFilterService, EventFilterService>();
         serviceCollection.AddScoped<IEventSubscriptionRepository, FileSubscriptionRepository>();
-        serviceCollection.AddScoped<IEventSubscriptionService,EventSubscriptionService>();
+        serviceCollection.AddScoped<IEventSubscriptionService, EventSubscriptionService>();
         return serviceCollection;
     }
 }

@@ -1,6 +1,5 @@
-﻿using EventManager.Service.Exceptions;
-using EventManager.Service.Validations;
-using EventManager.Service.Commands;
+﻿using EventManager.Domain.Commands;
+using EventManager.Domain.Exceptions;
 using FluentAssertions;
 namespace EventManager.Service.Tests.Commands.Test;
 

@@ -1,6 +1,8 @@
+using EventManager.FileRepository.Extensions;
+using EventManager.FileRepository.Models;
 using EventManager.Service.Extensions;
-using EventManager.Service.Services.Abstractions;
-using EventManager.Service.Services.FileRepositories;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 

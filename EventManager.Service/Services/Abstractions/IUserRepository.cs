@@ -1,4 +1,4 @@
-﻿using EventManager.Service.Models;
+﻿using EventManager.Domain.Models;
 namespace EventManager.Service.Services.Abstractions;
 
 public interface IUserRepository

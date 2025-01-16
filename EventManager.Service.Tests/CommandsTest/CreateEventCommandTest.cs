@@ -1,17 +1,13 @@
-﻿using EventManager.Service.Commands;
-using EventManager.Service.Exceptions;
+﻿using EventManager.Domain.Commands;
+using EventManager.Domain.Exceptions;
 using FluentAssertions;
-using Moq;
-using EventManager.Service.Services.Abstractions;
-using System.Xml.Linq;
-using EventManager.Service.Models.Enums;
 namespace EventManager.Service.Tests.Commands.Test;
 
 public class CreateEventCommandTest
 {
 
     [Fact(DisplayName = "ვალიდაციისას თუ დაწყების თარიღი წარსულშია")]
-    public void CreateCommandTest_ValidateDateAndDuration_ShouldThrowException_WhileStardDateIsInPast()
+    public void CreateCommandTest_Validate_ShouldThrowException_WhileStardDateIsInPast()
     {
         //Arrange
         var command = new CreateEventCommand
@@ -24,14 +20,14 @@ public class CreateEventCommandTest
         };
 
         //Act
-        Action act = () => command.ValidateDateAndDuration();
+        Action act = () => command.Validate();
 
         //Assert
         act.Should().Throw<ValidationException>().WithMessage("Start date must be in the future");
     }
 
     [Fact(DisplayName = "ვალიდაციისას თუ დასასრულის თარიყი არის დასაწყისზე ადრე თარიღზე")]
-    public void CreateCommandTest_ValidateDateAndDuration_ShouldThrowException_WhileEndDateIsEmpty()
+    public void CreateCommandTest_Validate_ShouldThrowException_WhileEndDateIsEmpty()
     {
 
         //Arrange
@@ -46,7 +42,7 @@ public class CreateEventCommandTest
 
         //Act
 
-        Action act = () => command.ValidateDateAndDuration();
+        Action act = () => command.Validate();
 
         //Assert 
         act.Should().Throw<ValidationException>().WithMessage("End date must be later than start date");
@@ -55,7 +51,7 @@ public class CreateEventCommandTest
 
     [Fact(DisplayName = "ვალიდაციისას ხანგრძლივობის არასწორ დათვლისას დაარტყას შეცდომა")]
 
-    public void CreateCommandTest_ValidateDateAndDuration_ShouldThrowException_whenDurationIsNotEqualEndDateMinusStartDate()
+    public void CreateCommandTest_Validate_ShouldThrowException_whenDurationIsNotEqualEndDateMinusStartDate()
     {
         var startDate = DateTime.Now.AddDays(+1);
         var endDate = DateTime.Now.AddDays(+3);
@@ -70,7 +66,7 @@ public class CreateEventCommandTest
             Name = "Name",
         };
         //Act
-        command.ValidateDateAndDuration();
+        command.Validate();
 
         //Assert
         command.Duration.Should().Be(endDate - startDate);
@@ -92,7 +88,7 @@ public class CreateEventCommandTest
             Name = "Name",
         };
         //Act
-        Action act = ()=> command.ValidateDateAndDuration();
+        Action act = ()=> command.Validate();
 
         //Assert
         act.Should().NotThrow();
