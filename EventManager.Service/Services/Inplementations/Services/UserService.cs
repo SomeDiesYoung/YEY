@@ -22,8 +22,8 @@ public class UserService : IUserService
     public async Task<int> ExecuteAsync(RegisterUserCommand command)
     {
         command.Validate();
-        var existingUser = await _userRepository.GetAllByNameAsync(command.UserName);
-        if (existingUser != null) throw new AlreadyExistsException("This user already exist");
+        //var existingUser = await _userRepository.GetAllByNameAsync(command.UserName);
+        //if (existingUser != null) throw new AlreadyExistsException("This user already exist");
 
         var NewUser = new User
         (

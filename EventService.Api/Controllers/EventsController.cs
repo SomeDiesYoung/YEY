@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EventService.Api.Controllers;
 
-[Route("api/Events")]
+[Route("api/events")]
 [ApiController]
 public class EventsController : ControllerBase
 {
@@ -25,21 +25,51 @@ public class EventsController : ControllerBase
 
 
     [HttpGet("{id}")]
-    public async Task<Event> GetEvent(int id)
+    public async Task<ActionResult<Event>> GetEvent(int id)
     {
         var @event = await _eventRepository.GetByIdAsync(id);
-        return @event;
+        if (@event is not null)
+        {
+            return Ok(@event);
+        }
+        return NotFound();
     }
 
     [HttpGet]
-    public async Task<List<Event>> ListEvent() => await _eventRepository.ListAsync();
+    public async Task<ActionResult<List<Event>>> ListEvent() => await _eventRepository.ListAsync();
 
 
     [HttpPost]
     public async Task<ActionResult> CreateEvent([FromBody]CreateEventCommand command)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
         var id = await _eventService.ExecuteAsync(command);
         return CreatedAtAction(nameof(GetEvent), new { id }, new {id});
     }
+
+    [HttpPut("{id}/postpone")]
+    public async Task<ActionResult> PostponeEvent([FromRoute] int id, [FromBody] PostponeEventCommand? command)
+    {
+        await _eventService.ExecuteAsync(new PostponeEventCommand { EventId = id , EndDate = command?.EndDate , StartDate = command?.StartDate });
+        return NoContent();
+    }
+
+    [HttpPut("{id}/activate")]
+    public async Task<ActionResult> ActivateEvent([FromRoute] int id ,[FromBody]ActivateEventCommand command)
+    {
+        await _eventService.ExecuteAsync(new ActivateEventCommand { EventId = id , StartDate=command.StartDate, EndDate = command.EndDate });
+        return NoContent();
+    }
+       
+    [HttpPut("{id}/cancel")]
+    public async Task<ActionResult> ActivateEvent([FromRoute] int id )
+    {
+        await _eventService.ExecuteAsync(new CancelEventCommand { EventId = id});
+        return NoContent();
+    }
+
 
 }

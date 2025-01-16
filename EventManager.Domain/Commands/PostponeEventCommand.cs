@@ -10,14 +10,20 @@ public sealed class PostponeEventCommand : EventStatusUpdateCommandBase, IComman
 
     public override void Validate()
     {
-        base.Validate();
-        if (StartDate < DateTime.Now)
+        if (StartDate.HasValue)
         {
-            throw new ValidationException("Start date must be earlier than today");
+            if (StartDate < DateTime.Now)
+            {
+                throw new ValidationException("Start date must be later than today");
+            }
         }
-        if (EndDate < StartDate)
+
+        if (EndDate.HasValue)
         {
-            throw new ValidationException("End date must be later than start date");
+            if (EndDate < StartDate)
+            {
+                throw new ValidationException("End date must be later than start date");
+            }
         }
     }
 }

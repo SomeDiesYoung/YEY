@@ -57,6 +57,7 @@ public class EventService : IEventService
     }
     public async Task ExecuteAsync(CancelEventCommand command)
     {
+        command.Validate();
         var eventForCancell = await _eventRepository.GetByIdAsync(command.EventId);
             eventForCancell.Cancel();
 
