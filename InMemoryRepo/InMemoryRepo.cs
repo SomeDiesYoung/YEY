@@ -29,7 +29,7 @@ namespace InMemoryRepo
             return Task.FromResult(exists);
         }
 
-        public Task<Event?> GetByIdAsync(int id)
+        public Task<Event> GetByIdAsync(int id)
         {
             var eventItem = _events.FirstOrDefault(e => e.Id == id);
             return Task.FromResult(eventItem);

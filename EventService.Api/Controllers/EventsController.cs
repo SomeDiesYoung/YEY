@@ -36,7 +36,7 @@ public class EventsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<Event>>> ListEvent() => await _eventRepository.ListAsync();
+    public async Task<ActionResult<List<Event>>> ListEvent(EventQueryFilter? filer) => await _eventRepository.ListAsync();
 
 
     [HttpPost]
@@ -71,5 +71,12 @@ public class EventsController : ControllerBase
         return NoContent();
     }
 
-
+    [HttpGet]
+    public async Task<ActionResult<List<Event>>> ListAccount([FromBody] EventQueryFilter? filter)
+    {
+       return await _eventRepository.ListAsync();
+    }
 }
+
+
+
