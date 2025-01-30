@@ -1,6 +1,7 @@
 ﻿using EventManager.Domain.Abstractions;
 using EventManager.Domain.Commands;
 using EventManager.Domain.Models;
+using EventManager.Domain.Queries;
 using EventManager.Service.Services.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -36,7 +37,10 @@ public class EventsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<Event>>> ListEvent(EventQueryFilter? filer) => await _eventRepository.ListAsync();
+    public async Task<ActionResult<List<Event>>> ListAccount([FromQuery] EventQueryFilter? filter)
+    {
+        return await _eventRepository.ListAsync(filter);
+    }
 
 
     [HttpPost]
@@ -53,6 +57,8 @@ public class EventsController : ControllerBase
     [HttpPut("{id}/postpone")]
     public async Task<ActionResult> PostponeEvent([FromRoute] int id, [FromBody] PostponeEventCommand? command)
     {
+        if (id != command!.EventId)
+            return BadRequest("Event id mismatch");
         await _eventService.ExecuteAsync(new PostponeEventCommand { EventId = id , EndDate = command?.EndDate , StartDate = command?.StartDate });
         return NoContent();
     }
@@ -60,22 +66,20 @@ public class EventsController : ControllerBase
     [HttpPut("{id}/activate")]
     public async Task<ActionResult> ActivateEvent([FromRoute] int id ,[FromBody]ActivateEventCommand command)
     {
+        if(id != command.EventId)
+            return BadRequest("Event id mismatch");
         await _eventService.ExecuteAsync(new ActivateEventCommand { EventId = id , StartDate=command.StartDate, EndDate = command.EndDate });
         return NoContent();
     }
        
     [HttpPut("{id}/cancel")]
-    public async Task<ActionResult> ActivateEvent([FromRoute] int id )
+    public async Task<ActionResult> CancelEvent([FromRoute] int id )
     {
         await _eventService.ExecuteAsync(new CancelEventCommand { EventId = id});
         return NoContent();
     }
 
-    [HttpGet]
-    public async Task<ActionResult<List<Event>>> ListAccount([FromBody] EventQueryFilter? filter)
-    {
-       return await _eventRepository.ListAsync();
-    }
+
 }
 
 

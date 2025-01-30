@@ -18,7 +18,7 @@ internal class Program
         var eventService = serviceProvider.GetRequiredService<IEventService>();
         var userService = serviceProvider.GetRequiredService<IUserService>();
         var subscriptionService = serviceProvider.GetRequiredService<IEventSubscriptionService>();
-        var filterService = serviceProvider.GetRequiredService<IEventFilterService>();
+        //var filterService = serviceProvider.GetRequiredService<IEventFilterService>();
         var eventRepo = serviceProvider.GetRequiredService<IEventRepository>();
         //var byid = await filterService.FilterByIdAsync(1);
         //var date = DateTime.Parse("2000-12-12");
@@ -80,7 +80,7 @@ internal class Program
         serviceCollection.AddScoped<ISequenceProvider, FileSequenceProvider>();
         serviceCollection.AddScoped<IUserService, UserService>();
         serviceCollection.AddScoped<IUserRepository, FileUserRepository>();
-        serviceCollection.AddScoped<IEventFilterService, EventFilterService>();
+        //serviceCollection.AddScoped<IEventFilterService, EventFilterService>();
         serviceCollection.AddScoped<IEventSubscriptionRepository, FileSubscriptionRepository>();
         serviceCollection.AddScoped<IEventSubscriptionService, EventSubscriptionService>();
         return serviceCollection;

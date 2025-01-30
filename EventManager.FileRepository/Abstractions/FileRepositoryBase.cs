@@ -31,7 +31,7 @@ public abstract class FileRepositoryBase<TEntity, TId>
     }
     public Task<TEntity?> GetByIdOrDefaultAsync(TId id)
     {
-        var entity = _entities.FirstOrDefault(entity => entity.Id.CompareTo(id) == 0);
+        var entity = _entities.FirstOrDefault(entity => entity.Id.Equals(id));
         return Task.FromResult(entity);
     }
     public Task<List<TEntity>> ListAsync()

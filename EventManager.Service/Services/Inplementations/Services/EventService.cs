@@ -2,6 +2,7 @@
 using EventManager.Domain.Commands;
 using EventManager.Domain.Exceptions;
 using EventManager.Domain.Models;
+using EventManager.Domain.Models.Enums;
 using EventManager.Service.Services.Abstractions;
 
 
@@ -32,7 +33,9 @@ public class EventService : IEventService
             startDate: command.StartDate,
             endDate: command.EndDate,
             duration: command.Duration,
-            location: command.Location
+            location: command.Location,
+            status : EventStatus.Active
+
         );
         return await _eventRepository.CreateAsync(newEvent);
     }

@@ -1,4 +1,5 @@
 ﻿using EventManager.Domain.Models;
+using EventManager.Domain.Queries;
 using EventManager.FileRepository.Abstractions;
 using EventManager.FileRepository.Models;
 using EventManager.Service.Services.Abstractions;
@@ -26,15 +27,25 @@ public sealed class FileEventRepository : FileRepositoryBase<Event, int>, IEvent
 
 
 
-    public async Task<IEnumerable<Event?>> GetAllByNameAsync(string name)
+    public async Task<List<Event>> ListAsync(EventQueryFilter? filter)
     {
-        if (string.IsNullOrWhiteSpace(name))
-        {
-            throw new ArgumentException("Name cannot be null or empty.");
-        }
+        if(filter is null) return await ListAsync();
 
-        var users = await ListAsync();
-        return users.Where(e => e.Name?.Contains(name, StringComparison.OrdinalIgnoreCase) ?? false).ToList();
+        IEnumerable<Event> events = await ListAsync();
+
+        if(filter.Name is not null) 
+             events = events.Where(e => e.Name.ToLower().Contains(filter.Name.ToLower()));
+
+        if(filter.StartDate is not null) 
+             events = events.Where(e => e.StartDate.Equals(filter.StartDate));
+
+        if(filter.EndDate is not null) 
+             events = events.Where(e => e.EndDate.Equals(filter.EndDate));
+
+        if (filter.Location is not null)
+            events = events.Where(e => e.Location.Equals(filter.Location));
+
+        return events.ToList();
     }
 
 

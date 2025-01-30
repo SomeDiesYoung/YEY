@@ -1,6 +1,7 @@
 using EventManager.FileRepository.Extensions;
 using EventManager.FileRepository.Models;
 using EventManager.Service.Extensions;
+using EventService.Api.Middlewares;
 
 
 
@@ -28,6 +29,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseErrorHandlingMiddleware();
 
 app.UseAuthorization();
 

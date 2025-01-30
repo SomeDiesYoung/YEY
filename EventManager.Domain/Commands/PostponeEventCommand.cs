@@ -10,6 +10,7 @@ public sealed class PostponeEventCommand : EventStatusUpdateCommandBase, IComman
 
     public override void Validate()
     {
+        base.Validate();
         if (StartDate.HasValue)
         {
             if (StartDate < DateTime.Now)

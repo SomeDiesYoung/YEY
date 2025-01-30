@@ -13,11 +13,11 @@ public class Event : DomainEntity<int>
     public DateTime? EndDate { get; private set; }
     public TimeSpan? Duration { get; private set; }
     public string Location { get; private set; }
-    public EventStatus Status { get; private set; } = EventStatus.Active;
+    public EventStatus Status { get; private set; }
 
 
 
-    public Event(string name, string description, DateTime? startDate, DateTime? endDate, TimeSpan? duration, string location)
+    public Event(string name, string description, DateTime? startDate, DateTime? endDate, TimeSpan? duration, string location,EventStatus status)
     {
         Name = name;
         Description = description;
@@ -25,6 +25,7 @@ public class Event : DomainEntity<int>
         EndDate = endDate;
         Duration = duration;
         Location = location;
+        Status = status;
     }
 
     public void Activate(DateTime startDate, DateTime endDate)
@@ -33,6 +34,7 @@ public class Event : DomainEntity<int>
         StartDate = startDate;
         EndDate = endDate;
         Status = EventStatus.Active;
+        Duration = endDate - startDate;
     }
     public void Postpone(DateTime? startDate, DateTime? endDate)
     {
@@ -40,6 +42,7 @@ public class Event : DomainEntity<int>
         StartDate = startDate;
         EndDate = endDate;
         Status = EventStatus.Postponed;
+        Duration = startDate.HasValue && endDate.HasValue ? endDate.Value - endDate.Value : null;
     }
 
     public void Cancel()
