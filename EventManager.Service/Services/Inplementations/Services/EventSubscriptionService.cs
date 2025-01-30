@@ -41,7 +41,6 @@ public class EventSubscriptionService : IEventSubscriptionService
         var NewSubscription = new EventSubscription
         {
             EventId = command.EventId,
-            Status = EventSubscriptionStatus.Active,
             UserId = command.UserId,
         };
 

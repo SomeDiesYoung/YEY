@@ -8,5 +8,4 @@ public class EventSubscription : DomainEntity<Guid>
 {
     public int UserId {  get; set; }
     public int EventId { get; set; }
-    public EventSubscriptionStatus Status { get; set; } = EventSubscriptionStatus.Active;
 }

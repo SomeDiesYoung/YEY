@@ -3,6 +3,7 @@ using EventManager.Domain.Commands;
 using EventManager.Domain.Models;
 using EventManager.Domain.Queries;
 using EventManager.Service.Services.Abstractions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -42,7 +43,7 @@ public class EventsController : ControllerBase
         return await _eventRepository.ListAsync(filter);
     }
 
-
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult> CreateEvent([FromBody]CreateEventCommand command)
     {

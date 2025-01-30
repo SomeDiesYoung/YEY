@@ -36,9 +36,10 @@ namespace EventService.Api.Controllers
         }
 
         [HttpPost("{id}")]
-        public async Task<ActionResult> RemoveSubscription([FromRoute] RemoveEventSubscriptionCommand command)
+        public async Task<ActionResult> RemoveSubscription([FromRoute] Guid id)
         {
-            await _eventSubscriptionService.ExecuteAsync(command);
+           
+             await _eventSubscriptionService.ExecuteAsync(new RemoveEventSubscriptionCommand { Id = id});
             return NoContent();
         }
 

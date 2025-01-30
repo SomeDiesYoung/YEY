@@ -96,9 +96,9 @@ namespace EventService.Api.Middlewares
     public class ErrorResponse
     {
         public int StatusCode { get; set; }
-        public string ErrorCode { get; set; }
-        public string Message { get; set; }
-        public string Detail { get; set; }
+        public string ErrorCode { get; set; } = default!;
+        public string Message { get; set; } = default!;
+        public string Detail { get; set; } = default!;
     }
     // Extension method used to add the middleware to the HTTP request pipeline.
     public static class ErrorHandlingMiddlewareExtensions
