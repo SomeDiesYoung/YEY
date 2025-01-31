@@ -1,6 +1,7 @@
 using EventManager.FileRepository.Extensions;
 using EventManager.FileRepository.Models;
 using EventManager.Service.Extensions;
+using EventService.Api.Extensions;
 using EventService.Api.Middlewares;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -14,37 +15,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-
-builder.Services.AddAuthentication("Bearer")
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new()
-        {
-            ValidateAudience = true,
-            ValidateIssuer = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-
-            ValidIssuer = builder.Configuration.GetValue<string>("Authentication:Issuer"),
-            ValidAudience = builder.Configuration.GetValue<string>("Authentication:Audience"),
-            IssuerSigningKey = new SymmetricSecurityKey(Convert.FromBase64String(builder.Configuration.GetValue<string>("Authentication:SecretKey"))),
+builder.AddSwaggerDocumentation()
+    .AddApplicationServices()
+    .AddRefreshAppSettings()
+    .AddJWTAuthentication()
+    .ConfiGureFileStorageOptions();
 
 
-            ClockSkew = TimeSpan.Zero
-        };
-    });
-
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>{
-    options.ExampleFilters();
-    });
-
-builder.Services.AddSwaggerExamplesFromAssemblies(Assembly.GetExecutingAssembly());
-
-builder.Services.AddRepositories();
-builder.Services.AddServices();
-
-builder.Services.Configure<FileStorageOptions>(builder.Configuration.GetSection("FileStorageOptions"));
 
 
 

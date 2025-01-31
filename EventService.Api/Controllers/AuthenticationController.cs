@@ -8,16 +8,16 @@ namespace EventService.Api.Controllers
 {
     [Route("api/authentication")]
     [ApiController]
-    public class Authentication : ControllerBase
+    public class AuthenticationController : ControllerBase
     {
         private readonly IConfiguration _configuration;
 
-        public Authentication(IConfiguration configuration)
+        public AuthenticationController(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
-        [HttpPost]
+        [HttpPost("authenticate")]
         public ActionResult<string> Authenticate([FromBody] AuthenticationRequest request)
         {
             var user = ValidateUser(request.UserName, request.Password);
@@ -26,21 +26,21 @@ namespace EventService.Api.Controllers
             var key = _configuration.GetValue<string>("Authentication:SecretKey") ??
                 throw new Exception("SecretKey is not provided in appsettings");
 
-            var securityKey = new SymmetricSecurityKey(Convert.FromBase64String(key));
+            var securityKey = _configuration.GetIssuerSigningKey();
 
             var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new List<Claim>
             {
-                new Claim("sub",user.UserId.ToString()),
+                new Claim("sub",user.Id.ToString()),
                 new Claim("given_name",user.FirstName),
                 new Claim("family_name",user.LastName),
                 new Claim("prefered_username",user.UserName),
             };
 
             var jwtToken = new JwtSecurityToken(
-                issuer: _configuration.GetValue<string>("Authentication:Issuer"),
-                audience: _configuration.GetValue<string>("Authentication:Audience"),
+                issuer: _configuration.GetJwtIssuer(),
+                audience: _configuration.GetJwtAudience(),
                 claims,
                 notBefore: DateTime.UtcNow,
                 expires: DateTime.UtcNow.AddMinutes(3),
@@ -51,26 +51,21 @@ namespace EventService.Api.Controllers
         }
 
 
-        private ApplicationUser ValidateUser(string userName,string password)
+        private ApplicationUser? ValidateUser(string? requestUserName,string? requestPassword)
         {
-            if(userName == "test@mail.com" && password == "123")
-            {
                 return new ApplicationUser()
                 {
-                    UserId = 1,
+                    Id = 1,
                     FirstName = "First",
                     LastName = "Last",
                     UserName = "Test@mail.com"
                 };
-            }
-
-            return null;
-        }
+           }
     }
 }
-public class ApplicationUser
+public sealed class ApplicationUser
 {
-    public required int UserId { get; set; }
+    public required int Id { get; set; }
     public required string UserName { get; set; }
     public required string FirstName { get; set; }
     public required string LastName { get; set; }

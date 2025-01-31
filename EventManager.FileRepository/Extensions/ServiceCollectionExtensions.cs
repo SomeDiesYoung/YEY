@@ -10,7 +10,7 @@ public static class ServiceCollectionExtensions
 {
 
 
-    public static IServiceCollection AddRepositories(this IServiceCollection serviceCollections) =>
+    public static IServiceCollection AddFileRepositories(this IServiceCollection serviceCollections) =>
         serviceCollections
         .AddScoped<ISequenceProvider, FileSequenceProvider>()
         .AddScoped<IEventRepository, FileEventRepository>()
