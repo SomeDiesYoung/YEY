@@ -4,5 +4,11 @@
     "Password": "NickNick123",
     "Email": "Tesla@gmail.com",
     "Id": 1
+  },
+  {
+    "UserName": "Monkey .D Luffy",
+    "Password": "P@$$word",
+    "Email": "BestUser@mail.com",
+    "Id": 2
   }
 ]

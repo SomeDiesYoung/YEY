@@ -1,6 +1,7 @@
 ﻿using EventManager.Domain.Exceptions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -35,71 +36,67 @@ namespace EventService.Api.Middlewares
 
     private static Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
-            var response = new ErrorResponse
+            var problemDetails = new ProblemDetails
             {
-                StatusCode = (int)HttpStatusCode.InternalServerError,
-                Message = "An unexpected error occurred .Please try again later.",
+                Title = "An unexpected error occurred",
+                Status = (int)HttpStatusCode.InternalServerError,
+                Instance = context.TraceIdentifier,
                 Detail = exception.Message
             };
 
             switch (exception)
             {
                 case UnauthorizedAccessException:
-                    response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                    response.ErrorCode = nameof(UnauthorizedAccessException);
-                    response.Message = "Unauthorized access.";
+                    problemDetails.Status = (int)HttpStatusCode.Unauthorized;
+                    problemDetails.Type = nameof(UnauthorizedAccessException);
+                    problemDetails.Title = "Unauthorized access.";
                     break;
                 case ArgumentNullException:
                 case ArgumentException:
-                    response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    response.ErrorCode = nameof(ArgumentException);
-                    response.Message = "Invalid request";
+                    problemDetails.Status = (int)HttpStatusCode.BadRequest;
+                    problemDetails.Type = nameof(ArgumentException);
+                    problemDetails.Title = "Invalid request";
                     break;
                 case KeyNotFoundException:
-                    response.StatusCode = (int)HttpStatusCode.NotFound;
-                    response.ErrorCode = nameof(KeyNotFoundException);
-                    response.Message = "Resource not found";
+                    problemDetails.Status = (int)HttpStatusCode.NotFound;
+                    problemDetails.Type = nameof(KeyNotFoundException);
+                    problemDetails.Title = "Resource not found";
                     break;
                 case ObjectNotFoundException:
-                    response.StatusCode = (int)HttpStatusCode.NotFound;
-                    response.ErrorCode = nameof(ObjectNotFoundException);
-                    response.Message = exception.Message;
+                    problemDetails.Status = (int)HttpStatusCode.NotFound;
+                    problemDetails.Type = nameof(ObjectNotFoundException);
+                    problemDetails.Title = exception.Message;
                     break;
                 case AlreadyExistsException:
-                    response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    response.ErrorCode = nameof(AlreadyExistsException);
-                    response.Message = exception.Message;
+                    problemDetails.Status = (int)HttpStatusCode.BadRequest;
+                    problemDetails.Type = nameof(AlreadyExistsException);
+                    problemDetails.Title = exception.Message;
                     break;
                 case ValidationException:
-                    response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    response.ErrorCode = nameof(ValidationException);
-                    response.Message = exception.Message;
+                    problemDetails.Status = (int)HttpStatusCode.BadRequest;
+                    problemDetails.Type = nameof(ValidationException);
+                    problemDetails.Title = exception.Message;
                     break;
                 case DomainException:
-                    response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    response.ErrorCode = nameof(DomainException);
-                    response.Message = exception.Message;
+                    problemDetails.Status = (int)HttpStatusCode.BadRequest;
+                    problemDetails.Type = nameof(DomainException);
+                    problemDetails.Title = exception.Message;
                     break;
             }
 
-            context.Response.ContentType = "application/json";
-            context.Response.StatusCode = response.StatusCode;
-            
+            context.Response.ContentType = "application/problem+json";
+            context.Response.StatusCode = problemDetails.Status.Value;
 
-            var result = JsonSerializer.Serialize(response);
+
+            var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+            var result = JsonSerializer.Serialize(problemDetails);
             return context.Response.WriteAsync(result);
 
 
     }
 }
 
-    public class ErrorResponse
-    {
-        public int StatusCode { get; set; }
-        public string ErrorCode { get; set; } = default!;
-        public string Message { get; set; } = default!;
-        public string Detail { get; set; } = default!;
-    }
+ 
     // Extension method used to add the middleware to the HTTP request pipeline.
     public static class ErrorHandlingMiddlewareExtensions
     {
