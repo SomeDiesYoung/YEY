@@ -5,6 +5,7 @@ using EventService.Api.Extensions;
 using EventService.Api.Middlewares;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 using Swashbuckle.AspNetCore.Filters;
 using System.Reflection;
 
@@ -23,6 +24,12 @@ builder.AddSwaggerDocumentation()
 
 
 
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom
+    .Configuration(builder.Configuration)
+    .CreateLogger();
+
+builder.Host.UseSerilog();
 
 
 var app = builder.Build();

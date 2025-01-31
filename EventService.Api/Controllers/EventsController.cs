@@ -6,6 +6,7 @@ using EventManager.Service.Services.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace EventService.Api.Controllers;
 
@@ -17,23 +18,28 @@ public class EventsController : ControllerBase
 
     private readonly IEventRepository _eventRepository;
     private readonly IEventService _eventService;
+    private readonly ILogger<EventsController> _logger;
 
-
-    public EventsController(IEventRepository eventRepository , IEventService eventService)
+    public EventsController(IEventRepository eventRepository, IEventService eventService, ILogger<EventsController> logger)
     {
         _eventRepository = eventRepository;
         _eventService = eventService;
+        _logger = logger;
     }
 
 
     [HttpGet("{id}")]
     public async Task<ActionResult<Event>> GetEvent(int id)
     {
+        _logger.LogInformation("Searching Event with id : {Id}",id);
+
         var @event = await _eventRepository.GetByIdAsync(id);
         if (@event is not null)
         {
+            _logger.LogDebug("Event Found : {@Event}",@event);
             return Ok(@event);
         }
+        _logger.LogWarning("Account not found");
         return NotFound();
     }
 
