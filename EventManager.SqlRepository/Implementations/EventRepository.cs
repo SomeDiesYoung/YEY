@@ -1,5 +1,6 @@
 ﻿using EventManager.Domain.Exceptions;
 using EventManager.Domain.Models;
+using EventManager.Domain.Models.Enums;
 using EventManager.Domain.Queries;
 using EventManager.Service.Services.Abstractions;
 using EventManager.SqlRepository.Database;
@@ -45,7 +46,10 @@ internal sealed class EventRepository : IEventRepository
 
     public async Task<List<Event>> ListAsync(EventQueryFilter? filter)
     {
-        var query = _appDbContext.Events.AsNoTracking().AsQueryable();
+        var query = _appDbContext.Events
+            .AsNoTracking()
+            .Where(q=>q.Status == EventStatus.Active)
+            .AsQueryable();
 
         if (filter is not null)
         {
@@ -59,7 +63,7 @@ internal sealed class EventRepository : IEventRepository
                 query = query.Where(x => x.EndDate == filter.EndDate);
 
             if (filter.Location is not null)
-                query = query.Where(x => EF.Functions.Like(x.Name, $"%{filter.Location}%"));
+                query = query.Where(x => EF.Functions.Like(x.Location, $"%{filter.Location}%"));
         }
 
         return await query.ToListAsync();

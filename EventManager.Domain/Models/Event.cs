@@ -11,7 +11,13 @@ public class Event : DomainEntity<int>
     public string? Description { get; private set; }
     public DateTime? StartDate { get; private set; }
     public DateTime? EndDate { get; private set; }
-    public double? DurationInHours { get; private set; }
+
+    private double? _durationInHours;
+    public double? DurationInHours
+    {
+        get => _durationInHours;
+        private set => _durationInHours = value.HasValue ? Math.Round(value.Value, 2) : null;
+    }
     public string Location { get; private set; } = default!;
     public EventStatus Status { get; private set; }
 
@@ -49,6 +55,9 @@ public class Event : DomainEntity<int>
     public void Cancel()
     {
         Status = EventStatus.Cancelled;
+        StartDate = null;
+        EndDate = null;
+        DurationInHours= null;
     }
 
 }
