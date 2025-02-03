@@ -11,16 +11,20 @@ internal sealed class EventRepository : IEventRepository
 {
 
     private readonly AppDbContext _appDbContext;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public EventRepository(AppDbContext appDbContext)
+    public EventRepository(AppDbContext appDbContext, IUnitOfWork unitOfWork)
     {
         _appDbContext = appDbContext;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<int> CreateAsync(Event Event)
     {
+
+        _unitOfWork.Start();
        await _appDbContext.AddAsync(Event);
-       await _appDbContext.SaveChangesAsync();
+        await _unitOfWork.CompleteAsync();
         return Event.Id;
     }
 
@@ -65,7 +69,9 @@ internal sealed class EventRepository : IEventRepository
     public async Task UpdateAsync(Event Event)
     {
         //realurad ar mchirdeba ubralod Rom maxsovdes rom Arsebobs 
+
+        _unitOfWork.Start();
         _appDbContext.Events.Attach(Event);
-        await _appDbContext.SaveChangesAsync();
+         await _unitOfWork.CompleteAsync();
     }
 }

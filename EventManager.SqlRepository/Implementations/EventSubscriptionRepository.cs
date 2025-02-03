@@ -9,24 +9,29 @@ namespace EventManager.SqlRepository.Implementations;
 internal sealed class EventSubscriptionRepository : IEventSubscriptionRepository
 {
     private readonly AppDbContext _appDbContext;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public EventSubscriptionRepository(AppDbContext appDbContext)
+    public EventSubscriptionRepository(AppDbContext appDbContext, IUnitOfWork unitOfWork)
     {
         _appDbContext = appDbContext;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<Guid> CreateAsync(EventSubscription Subscription)
     {
+        _unitOfWork.Start();
         await _appDbContext.AddAsync(Subscription);
-        await _appDbContext.SaveChangesAsync(); 
+        await _unitOfWork.CompleteAsync();
         return Subscription.Id;
     }
 
     public async Task DeleteAsync(Guid id)
     {
           var sub = await GetByIdAsync(id);
+
+        _unitOfWork.Start();
            _appDbContext.EventSubscriptions.Remove(sub);
-          await _appDbContext.SaveChangesAsync();
+          await _unitOfWork.CompleteAsync();
     }
 
     public async Task<bool> Exists(int eventId, int userId)
