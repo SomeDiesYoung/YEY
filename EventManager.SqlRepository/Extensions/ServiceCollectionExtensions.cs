@@ -11,6 +11,7 @@ public static class ServiceCollectionExtensions
     {
       return  services.AddScoped<IEventRepository, EventRepository>()
                 .AddScoped<IUserRepository, UserRepository>()
-                .AddScoped<IEventSubscriptionRepository, EventSubscriptionRepository>();
+                .AddScoped<IEventSubscriptionRepository, EventSubscriptionRepository>()
+                .AddScoped<IUnitOfWork, UnitOfWork>();
     }
 }
