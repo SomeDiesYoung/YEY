@@ -4,7 +4,7 @@
     "Description": "My First Post Request",
     "StartDate": "2025-02-03T14:18:02.566Z",
     "EndDate": "2025-02-10T14:18:02.566Z",
-    "Duration": "7.00:00:00",
+    "DurationInHours": "7.00:00:00",
     "Location": "My Backyard",
     "Status": 10,
     "Id": 1
@@ -14,7 +14,7 @@
     "Description": "Another Post Request",
     "StartDate": "2025-02-24T14:00:07.344Z",
     "EndDate": "2025-04-30T14:00:07.344Z",
-    "Duration": "1089.00:00:00",
+    "DurationInHours": "1089.00:00:00",
     "Location": "fSDF safEFf",
     "Status": 10,
     "Id": 2
@@ -24,7 +24,7 @@
     "Description": "string",
     "StartDate": "2025-02-03T14:18:02.566Z",
     "EndDate": "2025-02-10T14:18:02.566Z",
-    "Duration": "7.00:00:00",
+    "DurationInHours": "7.00:00:00",
     "Location": "Broadway",
     "Status": 99,
     "Id": 3
@@ -34,7 +34,7 @@
     "Description": "AuthorizationCheck",
     "StartDate": "2025-12-12T00:00:00",
     "EndDate": "2026-01-06T00:00:00",
-    "Duration": "25.00:00:00",
+    "DurationInHours": "25.00:00:00",
     "Location": "Here",
     "Status": 10,
     "Id": 4
@@ -44,7 +44,7 @@
     "Description": "Check Fucntionality After Update",
     "StartDate": "2025-12-12T00:00:00",
     "EndDate": "2026-01-03T00:00:00",
-    "Duration": "22.00:00:00",
+    "DurationInHours": "22.00:00:00",
     "Location": "Check",
     "Status": 10,
     "Id": 5

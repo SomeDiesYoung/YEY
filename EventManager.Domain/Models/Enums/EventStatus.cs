@@ -1,6 +1,6 @@
 ﻿namespace EventManager.Domain.Models.Enums;
 
-public enum EventStatus
+public enum EventStatus : byte
 {
     Active = 10,
     Postponed = 20,

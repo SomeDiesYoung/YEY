@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -27,7 +28,7 @@ namespace EventService.Api.Middlewares
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An unhandled exception occurred");
+                _logger.LogError(ex, "Exception: {Message}", ex.Message);
                 await HandleExceptionAsync(httpContext, ex);
             }
         }
@@ -89,7 +90,7 @@ namespace EventService.Api.Middlewares
 
 
             var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
-            var result = JsonSerializer.Serialize(problemDetails);
+            var result = JsonSerializer.Serialize(problemDetails,options);
             return context.Response.WriteAsync(result);
 
 

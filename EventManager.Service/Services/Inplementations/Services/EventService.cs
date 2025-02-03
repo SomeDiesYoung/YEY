@@ -32,7 +32,7 @@ public class EventService : IEventService
             description: command.Description,
             startDate: command.StartDate,
             endDate: command.EndDate,
-            duration: command.Duration,
+            durationInHours: command.DurationInHours,
             location: command.Location,
             status : EventStatus.Active
 

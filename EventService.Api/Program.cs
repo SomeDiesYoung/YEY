@@ -1,8 +1,10 @@
 using EventManager.FileRepository.Extensions;
 using EventManager.FileRepository.Models;
 using EventManager.Service.Extensions;
+using EventManager.SqlRepository.Database;
 using EventService.Api.Extensions;
 using EventService.Api.Middlewares;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
@@ -32,6 +34,8 @@ Log.Logger = new LoggerConfiguration()
 builder.Host.UseSerilog();
 
 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 var app = builder.Build();
 
 

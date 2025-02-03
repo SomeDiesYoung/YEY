@@ -49,7 +49,7 @@ public class EventsController : ControllerBase
         return await _eventRepository.ListAsync(filter);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpPost]
     public async Task<ActionResult> CreateEvent([FromBody]CreateEventCommand command)
     {

@@ -11,7 +11,7 @@ public class CreateEventCommand : ICommands
     public required string Description { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
-    public TimeSpan? Duration => (EndDate - StartDate);
+    public double? DurationInHours => (EndDate - StartDate).TotalHours;
     public required string Location { get; set; }
 
 
@@ -23,8 +23,8 @@ public class CreateEventCommand : ICommands
         if (Description.Length < 1 || Description.Length > 4000 || string.IsNullOrWhiteSpace(Description)) 
             throw new ValidationException("Description text length must be between 1 and 4000 chars");
 
-        if (Location.Length < 1 || Location.Length > 4000 || string.IsNullOrWhiteSpace(Location))
-            throw new ValidationException("Location length must be between 1 and 4000 chars");
+        if (Location.Length < 1 || Location.Length > 120 || string.IsNullOrWhiteSpace(Location))
+            throw new ValidationException("Location length must be between 1 and 120 chars");
 
 
         if (StartDate < DateTime.Now)

@@ -1,6 +1,7 @@
 ﻿using EventManager.FileRepository.Extensions;
 using EventManager.FileRepository.Models;
 using EventManager.Service.Extensions;
+using EventManager.SqlRepository.Extensions;
 using Swashbuckle.AspNetCore.Filters;
 using System.Reflection;
 
@@ -44,7 +45,7 @@ namespace EventService.Api.Extensions
 
         public static WebApplicationBuilder AddApplicationServices(this WebApplicationBuilder builder)
         {
-            builder.Services.AddServices().AddFileRepositories();
+            builder.Services.AddServices().AddSqlRepositories();
             return builder;
         }
     }

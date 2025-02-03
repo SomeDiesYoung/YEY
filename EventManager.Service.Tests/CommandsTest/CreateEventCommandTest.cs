@@ -62,14 +62,14 @@ public class CreateEventCommandTest
             StartDate = startDate,
             EndDate = endDate,
             Description = "Something",
-            Location = "Somewhere",
+            Location = "SomewheFre",
             Name = "Name",
         };
         //Act
         command.Validate();
 
         //Assert
-        command.Duration.Should().Be(endDate - startDate);
+        command.DurationInHours.Should().Be((endDate - startDate).TotalHours);
     }
 
 
