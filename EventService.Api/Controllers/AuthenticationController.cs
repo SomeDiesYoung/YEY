@@ -1,78 +1,112 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Azure.Core;
+using EventManager.SqlRepository.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace EventService.Api.Controllers
+namespace EventService.Api.Controllers;
+
+[Route("api/users")]
+[ApiController]
+public class UsersController : ControllerBase
 {
-    [Route("api/authentication")]
-    [ApiController]
-    public class AuthenticationController : ControllerBase
+    private readonly IConfiguration _configuration;
+    private readonly UserManager<ApplicationUser> _userManager;
+
+    public UsersController(IConfiguration configuration, UserManager<ApplicationUser> userManager)
     {
-        private readonly IConfiguration _configuration;
+        _configuration = configuration;
+        _userManager = userManager;
+    }
 
-        public AuthenticationController(IConfiguration configuration)
+
+
+    [HttpPost("authenticate")]
+    public async Task<ActionResult<string>> AuthenticateAsync([FromBody] LoginRequest request)
+    {
+
+        var user = await _userManager.FindByEmailAsync(request.Email);
+        if (user is null)
+            return Unauthorized();
+
+       if (!await _userManager.CheckPasswordAsync(user, request.Password))
         {
-            _configuration = configuration;
+            return Unauthorized();  
         }
 
-        [HttpPost("authenticate")]
-        public ActionResult<string> Authenticate([FromBody] AuthenticationRequest request)
+        return Ok(new
         {
-            var user = ValidateUser(request.UserName, request.Password);
-            if (user is null) return Unauthorized();
+             accessToken = GenerateJwt(user)
+        });
+     }
 
-            var key = _configuration.GetValue<string>("Authentication:SecretKey") ??
-                throw new Exception("SecretKey is not provided in appsettings");
 
-            var securityKey = _configuration.GetIssuerSigningKey();
 
-            var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+    [HttpPost("register")]
+    public async Task<ActionResult> RegisterAsync([FromBody]RegisterRequest request)
+    {
+        var user = new ApplicationUser { UserName = request.Email, Email = request.Email};
 
-            var claims = new List<Claim>
-            {
-                new Claim("sub",user.Id.ToString()),
-                new Claim("given_name",user.FirstName),
-                new Claim("family_name",user.LastName),
-                new Claim("prefered_username",user.UserName),
-            };
-
-            var jwtToken = new JwtSecurityToken(
-                issuer: _configuration.GetJwtIssuer(),
-                audience: _configuration.GetJwtAudience(),
-                claims,
-                notBefore: DateTime.UtcNow,
-                expires: DateTime.UtcNow.AddMinutes(3),
-                signingCredentials
-                );
-           var token =  new JwtSecurityTokenHandler().WriteToken(jwtToken);
-            return Ok(token);
+        var result = await _userManager.CreateAsync(user, request.Password);
+        if (result.Succeeded)
+        {
+            return Ok(new { accessToken = GenerateJwt(user) });
         }
 
+        return BadRequest(result.Errors);
+    }
 
-        private ApplicationUser? ValidateUser(string? requestUserName,string? requestPassword)
+
+    public async Task<ActionResult> ChangePasswordAsync([FromBody] ChangePasswordRequest request)
+    {
+        var user = await _userManager.FindByEmailAsync(request.Email);
+
+        if (user is null) return Unauthorized();
+
+        if (!await _userManager.CheckPasswordAsync(user, request.CurrentPassword))
         {
-                return new ApplicationUser()
-                {
-                    Id = 1,
-                    FirstName = "First",
-                    LastName = "Last",
-                    UserName = "Test@mail.com"
-                };
-           }
+            return Unauthorized();
+        }
+        var result = await _userManager.ChangePasswordAsync(user, request.CurrentPassword,request.NewPassword);
+
+        if (result.Succeeded)
+        {
+            return Ok(new { accessToken = GenerateJwt(user) });
+        }
+
+        return BadRequest(result.Errors);
+    }
+    private string GenerateJwt(ApplicationUser user)
+    {
+        var securityKey = _configuration.GetIssuerSigningKey();
+        var signInCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+        var claims = new List<Claim>
+    {
+        new ("sub", user.Id),
+        new ("preferred_username", user.UserName!)
+    };
+
+        var jwtSecurityToken = new JwtSecurityToken(
+            issuer: _configuration.GetJwtIssuer(),
+            audience: _configuration.GetJwtAudience(),
+            claims,
+            notBefore: DateTime.UtcNow,
+            expires: DateTime.UtcNow.AddMinutes(4),
+            signInCredentials);
+
+        var tokenToReturn = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+        return tokenToReturn;
     }
 }
-public sealed class ApplicationUser
-{
-    public required int Id { get; set; }
-    public required string UserName { get; set; }
-    public required string FirstName { get; set; }
-    public required string LastName { get; set; }
 
-}
-public sealed class AuthenticationRequest
+public sealed class ChangePasswordRequest
 {
-    public required string UserName { get; set; }
-    public required string Password { get; set; }
+    public required string Email { get; set; }
+    public required string CurrentPassword { get; set; }
+    public required string NewPassword { get; set; }
 }

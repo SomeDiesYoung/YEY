@@ -2,8 +2,10 @@ using EventManager.FileRepository.Extensions;
 using EventManager.FileRepository.Models;
 using EventManager.Service.Extensions;
 using EventManager.SqlRepository.Database;
+using EventManager.SqlRepository.Models;
 using EventService.Api.Extensions;
 using EventService.Api.Middlewares;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -25,7 +27,6 @@ builder.AddSwaggerDocumentation()
     .ConfiGureFileStorageOptions();
 
 
-
 Log.Logger = new LoggerConfiguration()
     .ReadFrom
     .Configuration(builder.Configuration)
@@ -36,6 +37,18 @@ builder.Host.UseSerilog();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
+
+
+
+builder.Services
+    .AddIdentity<ApplicationUser, IdentityRole>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
+
+
+
+
+
 var app = builder.Build();
 
 
