@@ -3,11 +3,11 @@ using Swashbuckle.AspNetCore.Filters;
 
 namespace EventService.Api.Examples
 {
-    public class RegisterUserCommandExample : IExamplesProvider<RegisterUserCommand>
+    public class RegisterCustomerCommandExample : IExamplesProvider<RegisterCustomerCommand>
     {
-        public RegisterUserCommand GetExamples()
+        public RegisterCustomerCommand GetExamples()
         {
-            return new RegisterUserCommand()
+            return new RegisterCustomerCommand()
             {
                 Email = "BestUser@mail.com",
                  Password = "P@$$word",

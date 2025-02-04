@@ -10,7 +10,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddSqlRepositories(this IServiceCollection services)
     {
       return  services.AddScoped<IEventRepository, EventRepository>()
-                .AddScoped<IUserRepository, UserRepository>()
+                .AddScoped<ICustomerRepository, CustomerRepository>()
                 .AddScoped<IEventSubscriptionRepository, EventSubscriptionRepository>()
                 .AddScoped<IUnitOfWork, UnitOfWork>();
     }

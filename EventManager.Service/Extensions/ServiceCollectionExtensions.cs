@@ -10,7 +10,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddServices(this IServiceCollection serviceCollections) => serviceCollections
         .AddScoped<IEventService, EventService>()
         .AddScoped<IEventSubscriptionService, EventSubscriptionService>()
-        .AddScoped<IUserService, UserService>();
+        .AddScoped<ICustomerService, CustomerService>();
  
 }
  

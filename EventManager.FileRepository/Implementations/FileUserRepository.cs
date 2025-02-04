@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 
 namespace EventManager.FileRepository.Implementations;
 
-public sealed class FileUserRepository : FileRepositoryBase<User,int>, IUserRepository
+public sealed class FileUserRepository : FileRepositoryBase<Cutsomer,int>, ICustomerRepository
 {
     private readonly ISequenceProvider _sequenceProvider;
     
@@ -16,7 +16,7 @@ public sealed class FileUserRepository : FileRepositoryBase<User,int>, IUserRepo
         _sequenceProvider = sequenceProvider;
     }
 
-    public  async Task<IEnumerable<User?>> GetAllByNameAsync(string name)
+    public  async Task<IEnumerable<Cutsomer?>> GetAllByNameAsync(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
         {

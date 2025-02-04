@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace EventManager.SqlRepository.EntityConfigurations
 {
-    public class UserConfiguration : IEntityTypeConfiguration<User>
+    public class CustomerConfiguration : IEntityTypeConfiguration<Cutsomer>
     {
-        public void Configure(EntityTypeBuilder<User> builder)
+        public void Configure(EntityTypeBuilder<Cutsomer> builder)
         {
-            builder.ToTable("Users");
+            builder.ToTable("Customers");
 
             builder.HasKey(u => u.Id);
 

@@ -9,7 +9,7 @@ public class UserCommandTest
     public void UserCommand_ShouldThrowException_WhenIdIsFilledIncorrectly()
     {
         //Arrange
-        var command = new RegisterUserCommand
+        var command = new RegisterCustomerCommand
         {
             UserName = "Test",
             Password = "Test",
@@ -26,7 +26,7 @@ public class UserCommandTest
     public void UserCommand_ShouldThrowException_WhenNameIsWhitespace()
     {
         //Arrange
-        var command = new RegisterUserCommand
+        var command = new RegisterCustomerCommand
         {
             UserName = "     ",
             Password = "afadgWRVREV",
@@ -44,7 +44,7 @@ public class UserCommandTest
     public void UserCommand_ShouldThrowException_WhenEmailFilledIncorrectly()
     {
         //Arrange
-        var command = new RegisterUserCommand
+        var command = new RegisterCustomerCommand
         {
             UserName = "wgberv",
             Password = "afadgWRVREV",

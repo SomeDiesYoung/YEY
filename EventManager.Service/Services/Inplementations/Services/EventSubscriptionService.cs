@@ -13,11 +13,11 @@ public class EventSubscriptionService : IEventSubscriptionService
     #region Private Fields
     private readonly IEventRepository _eventRepository;
     private readonly IEventSubscriptionRepository _eventSubscriptionRepository;
-    private readonly IUserRepository _userRepository;
+    private readonly ICustomerRepository _userRepository;
     #endregion Private Fields
 
     #region Constructor
-    public EventSubscriptionService(IEventSubscriptionRepository eventSubscriptionRepository, IEventRepository eventRepository, IUserRepository userRepository)
+    public EventSubscriptionService(IEventSubscriptionRepository eventSubscriptionRepository, IEventRepository eventRepository, ICustomerRepository userRepository)
     {
         _eventSubscriptionRepository = eventSubscriptionRepository;
         _eventRepository = eventRepository;

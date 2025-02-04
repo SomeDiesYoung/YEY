@@ -16,7 +16,7 @@ internal class Program
 
         var serviceProvider = RegisterServices().BuildServiceProvider();
         var eventService = serviceProvider.GetRequiredService<IEventService>();
-        var userService = serviceProvider.GetRequiredService<IUserService>();
+        var userService = serviceProvider.GetRequiredService<ICustomerService>();
         var subscriptionService = serviceProvider.GetRequiredService<IEventSubscriptionService>();
         //var filterService = serviceProvider.GetRequiredService<IEventFilterService>();
         var eventRepo = serviceProvider.GetRequiredService<IEventRepository>();
@@ -54,7 +54,7 @@ internal class Program
 
 
         var userJson = File.ReadAllText("G:\\C#projects\\GEOLAB\\Ehhhh\\YEY\\EventManager.ConsoleApp\\Jsons\\Users.json");
-        var userCommands = JsonSerializer.Deserialize<List<RegisterUserCommand>>(userJson);
+        var userCommands = JsonSerializer.Deserialize<List<RegisterCustomerCommand>>(userJson);
 
 
         //foreach (var user in userCommands)
@@ -78,8 +78,8 @@ internal class Program
         serviceCollection.AddScoped<IEventService, EventService>();
         serviceCollection.AddScoped<IEventRepository, FileEventRepository>();
         serviceCollection.AddScoped<ISequenceProvider, FileSequenceProvider>();
-        serviceCollection.AddScoped<IUserService, UserService>();
-        serviceCollection.AddScoped<IUserRepository, FileUserRepository>();
+        serviceCollection.AddScoped<ICustomerService, CustomerService>();
+        serviceCollection.AddScoped<ICustomerRepository, FileUserRepository>();
         //serviceCollection.AddScoped<IEventFilterService, EventFilterService>();
         serviceCollection.AddScoped<IEventSubscriptionRepository, FileSubscriptionRepository>();
         serviceCollection.AddScoped<IEventSubscriptionService, EventSubscriptionService>();

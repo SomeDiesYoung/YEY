@@ -8,7 +8,7 @@ namespace EventManager.Domain.Commands;
 /// <summary>
 /// Sealed Command (can become abstract in future)
 /// </summary>
-public sealed class RegisterUserCommand  : ICommands
+public sealed class RegisterCustomerCommand  : ICommands
 {
     public required string UserName { get; set; }
     public required string Password { get; set; }

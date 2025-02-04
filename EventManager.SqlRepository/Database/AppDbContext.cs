@@ -15,7 +15,7 @@ public sealed class AppDbContext : IdentityDbContext<ApplicationUser>
     }
 
     public DbSet<Event> Events { get; set; }
-    public DbSet<User> Users { get; set; }
+    public DbSet<Cutsomer> Customers { get; set; }
     public DbSet<EventSubscription> EventSubscriptions { get; set; }
 
 

@@ -5,27 +5,27 @@ using EventManager.Domain.Models;
 using EventManager.Service.Services.Abstractions;
 
 namespace EventManager.Service.Services.Inplementations.Services;
-public class UserService : IUserService
+public class CustomerService : ICustomerService
 {
     #region Private Fields
-    private readonly IUserRepository _userRepository;
+    private readonly ICustomerRepository _userRepository;
     #endregion Private Fields
 
     #region Constructors
-    public UserService(IUserRepository userRepository)
+    public CustomerService(ICustomerRepository userRepository)
     {
         _userRepository = userRepository;
     }
     #endregion Constructors
 
     #region Private Methods
-    public async Task<int> ExecuteAsync(RegisterUserCommand command)
+    public async Task<int> ExecuteAsync(RegisterCustomerCommand command)
     {
         command.Validate();
         //var existingUser = await _userRepository.GetAllByNameAsync(command.UserName);
         //if (existingUser != null) throw new AlreadyExistsException("This user already exist");
 
-        var NewUser = new User
+        var NewUser = new Cutsomer
         (
             userName: command.UserName,
             email: command.Email,

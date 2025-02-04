@@ -24,7 +24,7 @@ namespace EventManager.SqlRepository.EntityConfigurations
             builder.Property(es => es.EventId)
                 .IsRequired();
 
-            builder.HasOne<User>()
+            builder.HasOne<Cutsomer>()
                 .WithMany()
                 .HasForeignKey(es => es.UserId)
                 .OnDelete(DeleteBehavior.Cascade);

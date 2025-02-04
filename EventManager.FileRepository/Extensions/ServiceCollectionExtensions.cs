@@ -14,7 +14,7 @@ public static class ServiceCollectionExtensions
         serviceCollections
         .AddScoped<ISequenceProvider, FileSequenceProvider>()
         .AddScoped<IEventRepository, FileEventRepository>()
-        .AddScoped<IUserRepository, FileUserRepository>()
+        .AddScoped<ICustomerRepository, FileUserRepository>()
         .AddScoped<IEventSubscriptionRepository, FileSubscriptionRepository>();
 
  
