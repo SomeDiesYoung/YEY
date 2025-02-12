@@ -1,11 +1,9 @@
 ﻿using EventManager.Domain.Exceptions;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
+using EventManager.Identity.Exceptions;
+using EventManager.MessageSender.Exceptions;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Net;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace EventService.Api.Middlewares
 {
@@ -47,15 +45,39 @@ namespace EventService.Api.Middlewares
 
             switch (exception)
             {
-                case UnauthorizedAccessException:
+                case System.UnauthorizedAccessException:
                     problemDetails.Status = (int)HttpStatusCode.Unauthorized;
-                    problemDetails.Type = nameof(UnauthorizedAccessException);
+                    problemDetails.Type = nameof(System.UnauthorizedAccessException);
                     problemDetails.Title = "Unauthorized access.";
+                    break;
+                case EventManager.Identity.Exceptions.UnauthorizedAccessException:
+                    problemDetails.Title = exception.Message;
+                    problemDetails.Status = (int)HttpStatusCode.Unauthorized;
+                    problemDetails.Type = nameof(EventManager.Identity.Exceptions.UnauthorizedAccessException);
                     break;
                 case ArgumentNullException:
                 case ArgumentException:
                     problemDetails.Status = (int)HttpStatusCode.BadRequest;
                     problemDetails.Type = nameof(ArgumentException);
+                    problemDetails.Title = "Invalid request";
+                    break;
+                case ChangePasswordException ex:
+                    problemDetails.Status = (int)HttpStatusCode.BadRequest;
+                    problemDetails.Type = nameof(ChangePasswordException);
+                    problemDetails.Title = "Invalid request";
+                    problemDetails.Extensions = ex.Errors?.ToDictionary(x => x.Code, object? (x) => x.Description) ??
+                                          problemDetails.Extensions;
+                    break;
+                case IdentityException ex:
+                    problemDetails.Status = (int)HttpStatusCode.BadRequest;
+                    problemDetails.Type = nameof(IdentityException);
+                    problemDetails.Title = "Invalid request";
+                    problemDetails.Extensions = ex.Errors?.ToDictionary(x => x.Code, object? (x) => x.Description) ??
+                                          problemDetails.Extensions;
+                    break;
+                case EmailSendingException:
+                    problemDetails.Status = (int)HttpStatusCode.BadRequest;
+                    problemDetails.Type = nameof(IdentityException);
                     problemDetails.Title = "Invalid request";
                     break;
                 case KeyNotFoundException:

@@ -1,6 +1,6 @@
 ﻿using EventManager.Domain.Models;
+using EventManager.Identity.Models;
 using EventManager.SqlRepository.EntityConfigurations;
-using EventManager.SqlRepository.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;

@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EventManager.Identity\EventManager.Identity.csproj" />
     <ProjectReference Include="..\EventManager.Service\EventManager.Service.csproj" />
   </ItemGroup>
 
