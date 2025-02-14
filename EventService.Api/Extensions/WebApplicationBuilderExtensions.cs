@@ -1,8 +1,6 @@
 ﻿using Destructurama;
-using EventManager.FileRepository.Extensions;
 using EventManager.Identity.Extensions;
 using EventManager.MessageSender.Extensions;
-using EventManager.FileRepository.Models;
 using EventManager.Service.Extensions;
 using EventManager.SqlRepository.Database;
 using EventManager.SqlRepository.Extensions;
@@ -37,11 +35,7 @@ public static class WebApplicationBuilderExtensions
         return builder;
     }
 
-    public static WebApplicationBuilder ConfiGureFileStorageOptions(this WebApplicationBuilder builder)
-    {
-        builder.Services.Configure<FileStorageOptions>(builder.Configuration.GetSection("FileStorageOptions"));
-        return builder;
-    }
+
 
     public static WebApplicationBuilder AddJWTAuthentication(this WebApplicationBuilder builder)
     {

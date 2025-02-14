@@ -11,7 +11,6 @@ builder.AddSwaggerDocumentation()
     .AddApplicationServices()
     .AddRefreshAppSettings()
     .AddJWTAuthentication()
-    .ConfiGureFileStorageOptions()
     .AddSqlDbConnection()
     .AddIdentity()
     .AddLogger();
