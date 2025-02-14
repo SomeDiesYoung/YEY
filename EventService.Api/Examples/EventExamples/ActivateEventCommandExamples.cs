@@ -1,7 +1,7 @@
 ﻿using EventManager.Domain.Commands;
 using Swashbuckle.AspNetCore.Filters;
 
-namespace EventService.Api.Examples
+namespace EventService.Api.Examples.EventExamples
 {
     public sealed class ActivateEventCommandExamples : IExamplesProvider<ActivateEventCommand>
     {

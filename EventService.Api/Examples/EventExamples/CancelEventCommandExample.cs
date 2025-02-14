@@ -1,9 +1,9 @@
 ﻿using EventManager.Domain.Commands;
 using Swashbuckle.AspNetCore.Filters;
 
-namespace EventService.Api.Examples
+namespace EventService.Api.Examples.EventExamples
 {
-    public class CancelEventCommandExample : IExamplesProvider<CancelEventCommand>
+    public sealed class CancelEventCommandExample : IExamplesProvider<CancelEventCommand>
     {
         public CancelEventCommand GetExamples()
         {

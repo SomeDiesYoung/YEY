@@ -2,7 +2,7 @@
 using Swashbuckle.AspNetCore.Filters;
 using System.Xml.Linq;
 
-namespace EventService.Api.Examples
+namespace EventService.Api.Examples.EventExamples
 {
     public sealed class CreateEventCommandExamples : IExamplesProvider<CreateEventCommand>
     {
