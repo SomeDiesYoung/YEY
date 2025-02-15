@@ -12,7 +12,7 @@ namespace EventManager.Identity.Extensions
     {
         public static IServiceCollection AddJwtToken(this IServiceCollection services,IConfiguration configuration)
         {
-            services.AddSingleton<IJwtTokenService, JwtTokenService>()
+            services.AddScoped<ITokensService, JwtTokenService>()
                     .Configure<JwtTokenServiceOptions>(configuration.GetSection(JwtTokenServiceOptions.Authentication));
             return services;
         }

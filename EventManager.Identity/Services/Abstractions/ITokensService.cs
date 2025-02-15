@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace EventManager.Identity.Services.Abstractions;
 
-public interface IJwtTokenService
+public interface ITokensService
 {
-    string GenerateJwtToken(ApplicationUser user);
-
+    string GenerateAccessToken(ApplicationUser user);
+    Task<string> GenerateRefreshTokenAsync(ApplicationUser user);
+    Task<string> RefreshTokenAsync(string token);
 }

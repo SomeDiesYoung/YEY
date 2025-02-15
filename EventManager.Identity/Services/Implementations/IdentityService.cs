@@ -20,10 +20,10 @@ public sealed class IdentityService : IIdentityService
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly ILogger<IdentityService> _logger;
-    private readonly IJwtTokenService _jwtTokenService;
+    private readonly ITokensService _jwtTokenService;
     private readonly IEmailSenderService _emailService;
 
-    public IdentityService(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, ILogger<IdentityService> logger, IJwtTokenService jwtTokenService, IEmailSenderService emailService)
+    public IdentityService(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, ILogger<IdentityService> logger, ITokensService jwtTokenService, IEmailSenderService emailService)
     {
         _signInManager = signInManager;
         _userManager = userManager;
@@ -49,7 +49,7 @@ public sealed class IdentityService : IIdentityService
             throw new AuthenticationException();
         }
 
-        return _jwtTokenService.GenerateJwtToken(user);
+        return _jwtTokenService.GenerateAccessToken(user);
     }
 
     public async Task<string> ChangePasswordAsync(ChangePasswordRequest request)
@@ -72,7 +72,7 @@ public sealed class IdentityService : IIdentityService
             throw new IdentityException(result.Errors);
         }
 
-        return _jwtTokenService.GenerateJwtToken(user);
+        return _jwtTokenService.GenerateAccessToken(user);
 
     }
 

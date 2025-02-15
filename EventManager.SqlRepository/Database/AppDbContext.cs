@@ -1,5 +1,6 @@
 ﻿using EventManager.Domain.Models;
 using EventManager.Identity.Models;
+using EventManager.Identity.Services.Implementations;
 using EventManager.SqlRepository.EntityConfigurations;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -17,8 +18,7 @@ public sealed class AppDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Event> Events { get; set; }
     public DbSet<Cutsomer> Customers { get; set; }
     public DbSet<EventSubscription> EventSubscriptions { get; set; }
-
-
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
  
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
