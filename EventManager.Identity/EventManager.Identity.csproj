@@ -19,8 +19,4 @@
     <ProjectReference Include="..\EventManager.MessageSender.Abstractions\EventManager.MessageSender.Abstractions.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Responses\" />
-  </ItemGroup>
-
 </Project>

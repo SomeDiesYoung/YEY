@@ -1,6 +1,7 @@
 ﻿using EventManager.Identity.Exceptions;
 using EventManager.Identity.Models;
 using EventManager.Identity.Requests;
+using EventManager.Identity.Responses;
 using EventManager.Identity.Services.Abstractions;
 using EventManager.MessageSender.Abstractions.Models;
 using EventManager.MessageSender.Abstractions.Services.Abstractions;
@@ -33,7 +34,7 @@ public sealed class IdentityService : IIdentityService
     }
 
 
-    public async Task<string> AuthenticateAsync(LoginRequest request)
+    public async Task<TokensResponse> AuthenticateAsync(LoginRequest request)
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
         if (user is null)
@@ -41,6 +42,8 @@ public sealed class IdentityService : IIdentityService
             throw new AuthenticationException();
         }
 
+        if (!user.EmailConfirmed)
+            throw new AuthenticationException("Confirm Your Email");
         var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, lockoutOnFailure: true);
 
         if (!result.Succeeded)
@@ -49,10 +52,10 @@ public sealed class IdentityService : IIdentityService
             throw new AuthenticationException();
         }
 
-        return _jwtTokenService.GenerateAccessToken(user);
+        return await CreateTokenResponce(user);
     }
 
-    public async Task<string> ChangePasswordAsync(ChangePasswordRequest request)
+    public async Task<TokensResponse> ChangePasswordAsync(ChangePasswordRequest request)
     {
 
         var user = await _userManager.FindByEmailAsync(request.Email);
@@ -72,7 +75,7 @@ public sealed class IdentityService : IIdentityService
             throw new IdentityException(result.Errors);
         }
 
-        return _jwtTokenService.GenerateAccessToken(user);
+        return await CreateTokenResponce(user);
 
     }
 
@@ -86,7 +89,7 @@ public sealed class IdentityService : IIdentityService
 
         bool isValid = await _userManager.VerifyTwoFactorTokenAsync(user, "Email", request.Otp);
         if (!isValid)
-            throw new AuthenticationException();
+            throw new AuthenticationException("Invalid request, try again later");
 
         user.EmailConfirmed = true;
         await _userManager.UpdateAsync(user);
@@ -94,7 +97,7 @@ public sealed class IdentityService : IIdentityService
 
     }
 
-    public async Task NewPasswordAsync(NewPasswordRequest request)
+    public async Task<TokensResponse> NewPasswordAsync(NewPasswordRequest request)
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
 
@@ -120,14 +123,14 @@ public sealed class IdentityService : IIdentityService
         {
             throw new ChangePasswordException(addPasswordResult.Errors, "Failed to add the new password");
         }
+
+        var tokensResponse = await CreateTokenResponce(user);
         await _userManager.UpdateSecurityStampAsync(user);
+        return tokensResponse;
+
     }
 
-
-
-
-
-    public async Task<string?> RegisterAsync(RegisterRequest request)
+    public async Task<TokensResponse?> RegisterAsync(RegisterRequest request)
     {
         var user = new ApplicationUser
         {
@@ -146,6 +149,7 @@ public sealed class IdentityService : IIdentityService
                 await SendOtp(request.Email, code.Result);
                 return null;
             }
+            return await CreateTokenResponce(user);
         }
         throw new IdentityException();
     }
@@ -184,6 +188,21 @@ public sealed class IdentityService : IIdentityService
         user.LastOtpSentTime = DateTime.UtcNow;
         await _userManager.UpdateAsync(user);
     }
+
+
+
+
+
+
+
+    private async Task<TokensResponse> CreateTokenResponce(ApplicationUser user)
+    {
+        return new()
+        {
+            AccessToken = _jwtTokenService.GenerateAccessToken(user),
+            RefreshToken = await _jwtTokenService.GenerateRefreshTokenAsync(user),
+        };
+    }
     private async Task SendOtp(string email, string otp)
     {
         var emailData = new EmailData
@@ -195,4 +214,7 @@ public sealed class IdentityService : IIdentityService
 
         await _emailService.SendEmailAsync(emailData);
     }
+
+
 }
+    

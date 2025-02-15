@@ -1,5 +1,6 @@
 ﻿using EventManager.Identity.Models;
 using EventManager.Identity.Requests;
+using EventManager.Identity.Responses;
 using EventManager.Identity.Services.Abstractions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,12 +15,14 @@ public class UsersController : ControllerBase
     private readonly IConfiguration _configuration;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IIdentityService _identityService;
+    private readonly ITokensService _tokensService;
 
-    public UsersController(IConfiguration configuration, UserManager<ApplicationUser> userManager, IIdentityService identityService)
+    public UsersController(IConfiguration configuration, UserManager<ApplicationUser> userManager, IIdentityService identityService, ITokensService tokensService)
     {
         _configuration = configuration;
         _userManager = userManager;
         _identityService = identityService;
+        _tokensService = tokensService;
     }
 
 
@@ -27,17 +30,17 @@ public class UsersController : ControllerBase
     [HttpPost("authenticate")]
     public async Task<ActionResult<string>> AuthenticateAsync([FromBody] LoginRequest request)
     {
-        var accessToken = await _identityService.AuthenticateAsync(request);
-        return Ok(new { accessToken });
+        var tokensResponse = await _identityService.AuthenticateAsync(request);
+        return Ok(new { tokensResponse });
     }
 
     [HttpPost("register")]
     public async Task<ActionResult> RegisterAsync([FromBody] RegisterRequest request)
     {
-        var accessToken = await _identityService.RegisterAsync(request);
-        if (accessToken is not null)
+        var tokensResponse = await _identityService.RegisterAsync(request);
+        if (tokensResponse is not null)
         {
-            return Ok(new { accessToken });
+            return Ok(new { tokensResponse });
         }
 
         return NoContent();
@@ -46,8 +49,8 @@ public class UsersController : ControllerBase
     [HttpPost("change-password")]
     public async Task<ActionResult> ChangePasswordAsync([FromBody] ChangePasswordRequest request)
     {
-        var accessToken = await _identityService.ChangePasswordAsync(request);
-        return Ok(new { accessToken });
+        var tokensResponse = await _identityService.ChangePasswordAsync(request);
+        return Ok( $"Succeed Access&Refresh Tokens {new { tokensResponse }}");
     }
 
     [HttpPost("confirm-email")]
@@ -77,4 +80,9 @@ public class UsersController : ControllerBase
         return Ok("Sended. Check your Email");
     }
 
-} 
+    [HttpPost("refresh-token")]
+    public async Task<ActionResult<TokensResponse>> RefreshTokenAsync([FromBody] RefreshTokenRequest request)
+    {
+        return Ok($"New Refresh Token : {await _tokensService.RefreshTokenAsync(request.OldRefreshToken)}");
+    }
+}

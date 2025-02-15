@@ -1,5 +1,5 @@
-﻿using EventManager.Identity.Services.Abstractions;
-using EventManager.Identity.Services.Implementations;
+﻿using EventManager.Identity.Models;
+using EventManager.Identity.Services.Abstractions;
 using EventManager.Service.Services.Abstractions;
 using EventManager.SqlRepository.Database;
 using Microsoft.EntityFrameworkCore;

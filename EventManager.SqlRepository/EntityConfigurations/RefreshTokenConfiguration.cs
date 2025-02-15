@@ -1,5 +1,5 @@
-﻿using EventManager.Identity.Services.Abstractions;
-using EventManager.Identity.Services.Implementations;
+﻿using EventManager.Identity.Models;
+using EventManager.Identity.Services.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;

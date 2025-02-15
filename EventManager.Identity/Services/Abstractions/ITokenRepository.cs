@@ -1,4 +1,4 @@
-﻿using EventManager.Identity.Services.Implementations;
+﻿using EventManager.Identity.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
