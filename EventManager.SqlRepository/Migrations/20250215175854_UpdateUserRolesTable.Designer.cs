@@ -4,6 +4,7 @@ using EventManager.SqlRepository.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventManager.SqlRepository.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250215175854_UpdateUserRolesTable")]
+    partial class UpdateUserRolesTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -219,7 +222,7 @@ namespace EventManager.SqlRepository.Migrations
                         {
                             Id = "A117A8B5-F055-4A06-98A6-faxA4CEDBB24",
                             AccessDescription = "Can Subscribe/Unsubscribe on Events, has access to own account manipulations",
-                            ConcurrencyStamp = "member-concurrency-stamp",
+                            ConcurrencyStamp = "07e50ece-7018-4818-a582-cfce45465e1a",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         },
@@ -227,7 +230,7 @@ namespace EventManager.SqlRepository.Migrations
                         {
                             Id = "190F2xxC-7177-4C77-BAd2-9121A40206BB",
                             AccessDescription = "Can Manipulate with Events, has access to own account manipulations",
-                            ConcurrencyStamp = "admin-concurrency-stamp",
+                            ConcurrencyStamp = "2a43330a-c971-47ff-b2ef-47a621c62939",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });

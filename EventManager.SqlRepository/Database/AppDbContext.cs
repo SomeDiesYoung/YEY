@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace EventManager.SqlRepository.Database;
 
-public sealed class AppDbContext : IdentityDbContext<ApplicationUser>
+public sealed class AppDbContext : IdentityDbContext<ApplicationUser,ApplicationUserRole,string>
 {
     public AppDbContext(DbContextOptions options) : base(options)
     {

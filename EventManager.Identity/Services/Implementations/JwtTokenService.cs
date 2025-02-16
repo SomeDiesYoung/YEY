@@ -25,7 +25,7 @@ public sealed class JwtTokenService : ITokensService
         _tokenRepository = tokenRepository;
     }
 
-    public string GenerateAccessToken(ApplicationUser user)
+    public string GenerateAccessToken(ApplicationUser user, IList<string> roles)
     {
         var signInCredentials = new SigningCredentials(_options.GetSignInKey(), SecurityAlgorithms.HmacSha256);
 
@@ -34,6 +34,10 @@ public sealed class JwtTokenService : ITokensService
             new ("sub", user.Id),
             new ("preferred_username", user.UserName!)
         };
+        foreach (var role in roles)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, role));
+        }
 
         var jwtSecurityToken = new JwtSecurityToken(
             issuer: _options.Issuer,

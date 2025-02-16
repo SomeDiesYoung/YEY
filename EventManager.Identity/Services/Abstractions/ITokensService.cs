@@ -9,7 +9,7 @@ namespace EventManager.Identity.Services.Abstractions;
 
 public interface ITokensService
 {
-    string GenerateAccessToken(ApplicationUser user);
+    string GenerateAccessToken(ApplicationUser user, IList<string> roles);
     Task<string> GenerateRefreshTokenAsync(ApplicationUser user);
     Task<string> RefreshTokenAsync(string token);
 }

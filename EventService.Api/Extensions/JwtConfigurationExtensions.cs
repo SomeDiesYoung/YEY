@@ -1,11 +1,12 @@
 ﻿using EventManager.Service.Exceptions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
 public static class JwtConfigurationExtensions
 {
     public static IServiceCollection AddJwtBearerAuthentication(this IServiceCollection services,IConfiguration configuration)
     {
-        services.AddAuthentication("Bearer")
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>
              {
                  options.TokenValidationParameters = new()

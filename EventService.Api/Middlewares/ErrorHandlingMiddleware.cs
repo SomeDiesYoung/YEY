@@ -55,6 +55,11 @@ namespace EventService.Api.Middlewares
                     problemDetails.Status = (int)HttpStatusCode.Unauthorized;
                     problemDetails.Type = nameof(EventManager.Identity.Exceptions.UnauthorizedAccessException);
                     break;
+                case AuthenticationException:
+                    problemDetails.Status = (int)HttpStatusCode.Unauthorized;
+                    problemDetails.Type = nameof(ArgumentException);
+                    problemDetails.Title = exception.Message;
+                    break;
                 case ArgumentNullException:
                 case ArgumentException:
                     problemDetails.Status = (int)HttpStatusCode.BadRequest;
@@ -62,16 +67,16 @@ namespace EventService.Api.Middlewares
                     problemDetails.Title = "Invalid request";
                     break;
                 case ChangePasswordException ex:
-                    problemDetails.Status = (int)HttpStatusCode.BadRequest;
+                    problemDetails.Status = (int)HttpStatusCode.InternalServerError;
                     problemDetails.Type = nameof(ChangePasswordException);
-                    problemDetails.Title = "Invalid request";
+                    problemDetails.Title = exception.Message;
                     problemDetails.Extensions = ex.Errors?.ToDictionary(x => x.Code, object? (x) => x.Description) ??
                                           problemDetails.Extensions;
                     break;
                 case IdentityException ex:
                     problemDetails.Status = (int)HttpStatusCode.BadRequest;
                     problemDetails.Type = nameof(IdentityException);
-                    problemDetails.Title = "Invalid request";
+                    problemDetails.Title = exception.Message;
                     problemDetails.Extensions = ex.Errors?.ToDictionary(x => x.Code, object? (x) => x.Description) ??
                                           problemDetails.Extensions;
                     break;

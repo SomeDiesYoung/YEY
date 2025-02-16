@@ -141,17 +141,23 @@ public sealed class IdentityService : IIdentityService
 
         var result = await _userManager.CreateAsync(user, request.Password);
 
-        if (result.Succeeded)
-        {
-            if (_userManager.Options.SignIn.RequireConfirmedAccount)
+        if (!result.Succeeded) throw new IdentityException(result.Errors);
+ 
+        var roleResult= await _userManager.AddToRoleAsync(user, "Member");
+        if (!roleResult.Succeeded) throw new IdentityException(roleResult.Errors);
+        
+
+        if (_userManager.Options.SignIn.RequireConfirmedAccount)
             {
-                var code = _userManager.GenerateTwoFactorTokenAsync(user, "Email");
-                await SendOtp(request.Email, code.Result);
+                var code = await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
+                await SendOtp(request.Email, code);
                 return null;
             }
+               var role= _userManager.GetRolesAsync(user);
+
             return await CreateTokenResponce(user);
-        }
-        throw new IdentityException();
+
+        
     }
 
     public async Task ResetPasswordAsync(ResetPasswordRequest request)
@@ -184,9 +190,9 @@ public sealed class IdentityService : IIdentityService
         }
 
         var otp = await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
-        await SendOtp(request.Email, otp);
         user.LastOtpSentTime = DateTime.UtcNow;
         await _userManager.UpdateAsync(user);
+        await SendOtp(request.Email, otp);
     }
 
 
@@ -197,9 +203,11 @@ public sealed class IdentityService : IIdentityService
 
     private async Task<TokensResponse> CreateTokenResponce(ApplicationUser user)
     {
+
+        var roles = await _userManager.GetRolesAsync(user);
         return new()
         {
-            AccessToken = _jwtTokenService.GenerateAccessToken(user),
+            AccessToken = _jwtTokenService.GenerateAccessToken(user,roles),
             RefreshToken = await _jwtTokenService.GenerateRefreshTokenAsync(user),
         };
     }

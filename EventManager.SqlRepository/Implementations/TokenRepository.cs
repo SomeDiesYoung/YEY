@@ -36,7 +36,6 @@ namespace EventManager.SqlRepository.Implementations
         public async Task<RefreshToken?> GetRefreshTokenAsync(string refreshToken)
         {
             return await _appDbContext.RefreshTokens
-                .AsNoTracking()
                 .FirstOrDefaultAsync(token=>token.Value==refreshToken);
         }
 
