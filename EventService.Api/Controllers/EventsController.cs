@@ -2,10 +2,13 @@
 using EventManager.Domain.Commands;
 using EventManager.Domain.Models;
 using EventManager.Domain.Queries;
+using EventManager.Identity.Constants;
 using EventManager.Service.Services.Abstractions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Text.Json;
 
 namespace EventService.Api.Controllers;
@@ -46,10 +49,12 @@ public class EventsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<Event>>> ListAccount([FromQuery] EventQueryFilter? filter)
     {
+        _logger.LogInformation("Applied filters :{@filter}",filter);
         return await _eventRepository.ListAsync(filter);
     }
 
-    //[Authorize]
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"{RoleConstants.Admin},{RoleConstants.Owner}")]
     [HttpPost]
     public async Task<ActionResult> CreateEvent([FromBody]CreateEventCommand command)
     {
@@ -61,6 +66,8 @@ public class EventsController : ControllerBase
         return CreatedAtAction(nameof(GetEvent), new { id }, new {id});
     }
 
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"{RoleConstants.Admin},{RoleConstants.Owner}")]
     [HttpPut("{id}/postpone")]
     public async Task<ActionResult> PostponeEvent([FromRoute] int id, [FromBody] PostponeEventCommand? command)
     {
@@ -70,6 +77,7 @@ public class EventsController : ControllerBase
         return NoContent();
     }
 
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"{RoleConstants.Admin},{RoleConstants.Owner}")]
     [HttpPut("{id}/activate")]
     public async Task<ActionResult> ActivateEvent([FromRoute] int id ,[FromBody]ActivateEventCommand command)
     {
@@ -78,7 +86,8 @@ public class EventsController : ControllerBase
         await _eventService.ExecuteAsync(new ActivateEventCommand { EventId = id , StartDate=command.StartDate, EndDate = command.EndDate });
         return NoContent();
     }
-       
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"{RoleConstants.Admin},{RoleConstants.Owner}")]
     [HttpPut("{id}/cancel")]
     public async Task<ActionResult> CancelEvent([FromRoute] int id )
     {

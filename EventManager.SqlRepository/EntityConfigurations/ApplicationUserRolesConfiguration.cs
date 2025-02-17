@@ -29,6 +29,14 @@ namespace EventManager.SqlRepository.EntityConfigurations
                     NormalizedName = "ADMIN",
                     AccessDescription = "Can Manipulate with Events, has access to own account manipulations",
                     ConcurrencyStamp = "admin-concurrency-stamp",
+                },     
+                new ApplicationUserRole
+                {
+                    Id = "e2H52d72-326e-4AV3-8f1b-7d1a2c2ed14b",
+                    Name = "Owner",
+                    NormalizedName = "OWNER",
+                    AccessDescription = "Can Manage Roles, can assign Roles to Users",
+                    ConcurrencyStamp = "owner-concurrency-stamp",
                 }
                 );
         }

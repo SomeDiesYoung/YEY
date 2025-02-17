@@ -1,6 +1,8 @@
 ﻿using EventManager.Domain.Abstractions;
 using EventManager.Domain.Commands;
 using EventManager.Service.Services.Abstractions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,24 +10,25 @@ namespace EventService.Api.Controllers
 {
     [Route("api/customers")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class CustomerController : ControllerBase
     {
-        private readonly ICustomerService _userService;
-        private readonly ICustomerRepository _userRepository;
+        private readonly ICustomerService _customerService;
+        private readonly ICustomerRepository _customerRepository;
 
-        public CustomerController(ICustomerRepository userRepository, ICustomerService userService)
+        public CustomerController(ICustomerRepository customerRepository, ICustomerService customerService)
         {
-            _userRepository = userRepository;
-            _userService = userService;
+            _customerRepository = customerRepository;
+            _customerService = customerService;
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult> GetCostumerId(int id)
+        public async Task<ActionResult> GetCustomerById(int id)
         {
-           var user = await _userRepository.GetByIdAsync(id);
-            if (user is not null)
+           var customer = await _customerRepository.GetByIdAsync(id);
+            if (customer is not null)
             {
-                return Ok(user);
+                return Ok(customer);
             }
             return NotFound();
         }
@@ -36,8 +39,8 @@ namespace EventService.Api.Controllers
             if (!ModelState.IsValid) {
                 return BadRequest(ModelState);
             }
-            var userId = await _userService.ExecuteAsync(command);
-            return CreatedAtAction(nameof(GetCostumerId), new { id = userId},null);
+            var customerId = await _customerService.ExecuteAsync(command);
+            return CreatedAtAction(nameof(GetCustomerById), new { id = customerId},null);
         }
     }
 }

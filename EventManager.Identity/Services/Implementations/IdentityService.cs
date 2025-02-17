@@ -1,4 +1,5 @@
-﻿using EventManager.Identity.Exceptions;
+﻿using EventManager.Identity.Constants;
+using EventManager.Identity.Exceptions;
 using EventManager.Identity.Models;
 using EventManager.Identity.Requests;
 using EventManager.Identity.Responses;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -36,14 +38,8 @@ public sealed class IdentityService : IIdentityService
 
     public async Task<TokensResponse> AuthenticateAsync(LoginRequest request)
     {
-        var user = await _userManager.FindByEmailAsync(request.Email);
-        if (user is null)
-        {
-            throw new AuthenticationException();
-        }
+        var user = await GetValidatedUser(request.Email);
 
-        if (!user.EmailConfirmed)
-            throw new AuthenticationException("Confirm Your Email");
         var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, lockoutOnFailure: true);
 
         if (!result.Succeeded)
@@ -58,11 +54,7 @@ public sealed class IdentityService : IIdentityService
     public async Task<TokensResponse> ChangePasswordAsync(ChangePasswordRequest request)
     {
 
-        var user = await _userManager.FindByEmailAsync(request.Email);
-        if (user is null)
-        {
-            throw new AuthenticationException();
-        }
+        var user = await GetValidatedUser(request.Email);
 
         if (!await _userManager.CheckPasswordAsync(user, request.CurrentPassword))
         {
@@ -99,14 +91,11 @@ public sealed class IdentityService : IIdentityService
 
     public async Task<TokensResponse> NewPasswordAsync(NewPasswordRequest request)
     {
-        var user = await _userManager.FindByEmailAsync(request.Email);
-
-        if (user is null)
-            throw new AuthenticationException();
+        var user = await GetValidatedUser(request.Email);
 
         bool isValid = await _userManager.VerifyTwoFactorTokenAsync(user, "ResetPassword", request.Otp);
         if (!isValid)
-            throw new AuthenticationException();
+            throw new AuthenticationException("Invalid Token");
 
 
         if (!string.IsNullOrEmpty(user.PasswordHash))
@@ -143,7 +132,7 @@ public sealed class IdentityService : IIdentityService
 
         if (!result.Succeeded) throw new IdentityException(result.Errors);
  
-        var roleResult= await _userManager.AddToRoleAsync(user, "Member");
+        var roleResult= await _userManager.AddToRoleAsync(user, RoleConstants.Member);
         if (!roleResult.Succeeded) throw new IdentityException(roleResult.Errors);
         
 
@@ -194,13 +183,107 @@ public sealed class IdentityService : IIdentityService
         await _userManager.UpdateAsync(user);
         await SendOtp(request.Email, otp);
     }
+    public async Task AssignAdminRoleAsync(AssignAdminRoleRequest request) 
+    {
+        var user = await GetValidatedUser(request.Email);
+
+        var userRoles = await _userManager.GetRolesAsync(user);
+        //if (userRoles.Contains(RoleConstants.Owner))
+        //{
+        //    throw new IdentityException("You cannot demote yourself from the Owner role.");
+        //}
+        if (userRoles.Contains(RoleConstants.Admin))
+        {
+            throw new IdentityException("User already has this role");
+        }
+
+
+        var result = await _userManager.AddToRoleAsync(user, RoleConstants.Admin);
+        if (!result.Succeeded)
+            throw new IdentityException("Failed to add Role. Try again later");
+
+
+         await CreateTokenResponce(user);
+    }
+
+    public async Task RemoveAdminRoleAsync(RemoveAdminRoleRequest request, string? requester)
+    {
+        var user = await GetValidatedUser(request.Email);
+
+        var userRoles = await _userManager.GetRolesAsync(user);
+        if (!userRoles.Contains(RoleConstants.Admin))
+        {
+            throw new IdentityException("User Doesn`t have Admins permissions");
+        }
+
+        if (string.IsNullOrWhiteSpace(requester))
+        {
+            throw new AuthenticationException("Invalid user identity.");
+        }
+        else if (user.Id.Equals(requester, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new IdentityException("You cannot change your own role.");
+        }
+
+        var result = await _userManager.RemoveFromRoleAsync(user, RoleConstants.Admin);
+        if (!result.Succeeded)
+            throw new IdentityException("Failed to remove Role. Try again later");
+
+         await CreateTokenResponce(user);
+    }
+
+    public async Task AssignOwnerRoleAsync(AssignOwnerRoleRequest request)
+    {
+        var user = await GetValidatedUser(request.Email);
+
+        var userRoles = await _userManager.GetRolesAsync(user);
+        if (userRoles.Contains(RoleConstants.Owner))
+        {
+            throw new IdentityException("User already has Owner role.");
+        }
+
+        var result = await _userManager.AddToRoleAsync(user, RoleConstants.Owner);
+        if (!result.Succeeded)
+            throw new IdentityException("Failed to add Role. Try again later");
+
+         await CreateTokenResponce(user);
+
+    }
+
+    public async Task RemoveOwnerRoleAsync(RemoveOwnerRoleRequest request, string? requester)
+    {
+
+        var user = await GetValidatedUser(request.Email);
+
+
+        if (string.IsNullOrWhiteSpace(requester))
+        {
+            throw new AuthenticationException("Invalid requester identity.");
+        }
+        else if (user.Id.Equals(requester, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new IdentityException("You cannot change your own role.");
+        }
+
+
+        var result = await _userManager.RemoveFromRoleAsync(user, RoleConstants.Owner);
+        if (!result.Succeeded)
+            throw new IdentityException("Failed to remove Role. Try again later");
+
+
+         await CreateTokenResponce(user);
+    }
 
 
 
-
-
-
-
+    private async Task<ApplicationUser> GetValidatedUser(string Email)
+    {
+        var user = await _userManager.FindByEmailAsync(Email);
+        if (user is null) throw new AuthenticationException();
+        if(!user.EmailConfirmed)
+            throw new AuthenticationException($"User :{Email} needs to confirm email");
+        return user;
+    }
     private async Task<TokensResponse> CreateTokenResponce(ApplicationUser user)
     {
 
@@ -222,7 +305,6 @@ public sealed class IdentityService : IIdentityService
 
         await _emailService.SendEmailAsync(emailData);
     }
-
 
 }
     

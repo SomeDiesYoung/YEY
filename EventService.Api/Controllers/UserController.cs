@@ -1,9 +1,12 @@
-﻿using EventManager.Identity.Models;
+﻿using EventManager.Identity.Constants;
 using EventManager.Identity.Requests;
 using EventManager.Identity.Responses;
 using EventManager.Identity.Services.Abstractions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 
 namespace EventService.Api.Controllers;
@@ -12,45 +15,41 @@ namespace EventService.Api.Controllers;
 [ApiController]
 public class UsersController : ControllerBase
 {
-    private readonly IConfiguration _configuration;
-    private readonly UserManager<ApplicationUser> _userManager;
+
     private readonly IIdentityService _identityService;
     private readonly ITokensService _tokensService;
 
-    public UsersController(IConfiguration configuration, UserManager<ApplicationUser> userManager, IIdentityService identityService, ITokensService tokensService)
+    public UsersController(IIdentityService identityService, ITokensService tokensService)
     {
-        _configuration = configuration;
-        _userManager = userManager;
         _identityService = identityService;
         _tokensService = tokensService;
     }
 
-
-
+    [AllowAnonymous]
     [HttpPost("authenticate")]
-    public async Task<ActionResult<string>> AuthenticateAsync([FromBody] LoginRequest request)
+    public async Task<ActionResult<TokensResponse>> AuthenticateAsync([FromBody] LoginRequest request)
     {
         var tokensResponse = await _identityService.AuthenticateAsync(request);
-        return Ok(new { tokensResponse });
+        return Ok(tokensResponse);
     }
 
     [HttpPost("register")]
-    public async Task<ActionResult> RegisterAsync([FromBody] RegisterRequest request)
+    public async Task<ActionResult<TokensResponse?>> RegisterAsync([FromBody] RegisterRequest request)
     {
         var tokensResponse = await _identityService.RegisterAsync(request);
         if (tokensResponse is not null)
         {
-            return Ok(new { tokensResponse });
+            return Ok(tokensResponse);
         }
 
-        return NoContent();
+        return Ok("Check email for confirmation code");
     }
-
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Member")]
     [HttpPost("change-password")]
-    public async Task<ActionResult> ChangePasswordAsync([FromBody] ChangePasswordRequest request)
+    public async Task<ActionResult<TokensResponse>> ChangePasswordAsync([FromBody] ChangePasswordRequest request)
     {
         var tokensResponse = await _identityService.ChangePasswordAsync(request);
-        return Ok( $"Succeed Access&Refresh Tokens {new { tokensResponse }}");
+        return Ok(tokensResponse);
     }
 
     [HttpPost("confirm-email")]
@@ -60,17 +59,19 @@ public class UsersController : ControllerBase
         return Ok("Email Confirmed");
     }
 
+
     [HttpPost("reset-password")]
     public async Task<ActionResult> ResetPasswordAsync([FromBody] ResetPasswordRequest request)
     {
         await _identityService.ResetPasswordAsync(request);
         return Ok("Check your Email");
     }
-    [HttpPost("new-Password")]
-    public async Task<ActionResult> NewPasswordAsync([FromBody] NewPasswordRequest request)
+
+    [HttpPost("new-password")]
+    public async Task<ActionResult<TokensResponse>> NewPasswordAsync([FromBody] NewPasswordRequest request)
     {
-        await _identityService.NewPasswordAsync(request);
-        return Ok("Success");
+        var tokenRensponse = await _identityService.NewPasswordAsync(request);
+        return Ok(tokenRensponse);
     }
 
     [HttpPost("resend-confirmation-otp")]
@@ -80,9 +81,44 @@ public class UsersController : ControllerBase
         return Ok("Sended. Check your Email");
     }
 
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPost("refresh-token")]
     public async Task<ActionResult<TokensResponse>> RefreshTokenAsync([FromBody] RefreshTokenRequest request)
     {
-        return Ok($"New Refresh Token : {await _tokensService.RefreshTokenAsync(request.OldRefreshToken)}");
+        return Ok(await _tokensService.RefreshTokenAsync(request.OldRefreshToken));
+    }
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,Roles = RoleConstants.Owner)]
+    [HttpPost("roles-assign-admin")]
+    public async Task<ActionResult<TokensResponse>> GiveAdminRole([FromBody] AssignAdminRoleRequest request)
+    {
+         await _identityService.AssignAdminRoleAsync(request);
+        return Ok("Succeed");
+    }
+     
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = RoleConstants.Owner)]
+    [HttpPost("roles-demote-admin")]
+    public async Task<ActionResult<TokensResponse>> RemoveAdminRole([FromBody] RemoveAdminRoleRequest request)
+    {
+        var requesterId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        await _identityService.RemoveAdminRoleAsync(request, requesterId);
+        return Ok("Succeed");
+    }
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,Roles = RoleConstants.Owner)]
+    [HttpPost("roles-assign-owner")]
+    public async Task<ActionResult<TokensResponse>> GiveOwnerRole([FromBody] AssignOwnerRoleRequest request)
+    {
+        await _identityService.AssignOwnerRoleAsync(request);
+        return Ok("Succeed");
+    }
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = RoleConstants.Owner)]
+    [HttpPost("roles-demote-owner")]
+    public async Task<ActionResult<TokensResponse>> RemoveOwnerRole([FromBody] RemoveOwnerRoleRequest request)
+    {
+        var requesterId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        await _identityService.RemoveOwnerRoleAsync(request, requesterId);
+        return Ok("Succeed");
     }
 }

@@ -24,4 +24,8 @@ public interface IIdentityService
 
     Task RefreshConfirmationCodeAsync(ResendOtpRequest request);
 
+    Task AssignAdminRoleAsync(AssignAdminRoleRequest request);
+    Task RemoveAdminRoleAsync(RemoveAdminRoleRequest request , string? requester);
+    Task AssignOwnerRoleAsync(AssignOwnerRoleRequest request);
+    Task RemoveOwnerRoleAsync(RemoveOwnerRoleRequest request, string? requester);
 }

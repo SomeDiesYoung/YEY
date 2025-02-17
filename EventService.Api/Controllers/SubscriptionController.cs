@@ -2,6 +2,8 @@
 using EventManager.Domain.Commands;
 using EventManager.Domain.Models;
 using EventManager.Service.Services.Abstractions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,6 +11,7 @@ namespace EventService.Api.Controllers
 {
     [Route("api/subscriptions")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class SubscriptionController : ControllerBase
     {
 
