@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace EventManager.Identity.Models
 {
-    public sealed class ApplicationUserRole : IdentityRole
+    public sealed class ApplicationRole : IdentityRole
     {
         public string? AccessDescription { get; set; }
+
     }
 }

@@ -4,6 +4,7 @@ using EventManager.SqlRepository.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventManager.SqlRepository.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250222152020_UpdateRoleName")]
+    partial class UpdateRoleName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -239,24 +242,6 @@ namespace EventManager.SqlRepository.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "8e445865-a24d-4543-a6c6-9443d048cdb9",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "ba088727-0278-45aa-81c6-3f82a1bff846",
-                            Email = "EventManagerOwner@yopmail.com",
-                            EmailConfirmed = true,
-                            LockoutEnabled = true,
-                            NormalizedEmail = "EVENTMANAGEROWNER@YOPMAIL.COM",
-                            NormalizedUserName = "SERVICEDEFAULTOWNER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGIOE+75U/gx0OdCzYPi19fYQZUZao7vshDU74orMUYLNSgWOuYq0uGUzi9IyKbATQ==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "7bf5fc7a-c12b-4b0c-a33d-f81969c277e9",
-                            TwoFactorEnabled = false,
-                            UserName = "ServiceDefaultOwner"
-                        });
                 });
 
             modelBuilder.Entity("EventManager.Identity.Models.RefreshToken", b =>
@@ -373,13 +358,6 @@ namespace EventManager.SqlRepository.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = "8e445865-a24d-4543-a6c6-9443d048cdb9",
-                            RoleId = "e2H52d72-326e-4AV3-8f1b-7d1a2c2ed14b"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>

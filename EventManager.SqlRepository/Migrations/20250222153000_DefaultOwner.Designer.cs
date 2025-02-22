@@ -4,6 +4,7 @@ using EventManager.SqlRepository.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventManager.SqlRepository.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250222153000_DefaultOwner")]
+    partial class DefaultOwner
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -245,15 +248,15 @@ namespace EventManager.SqlRepository.Migrations
                         {
                             Id = "8e445865-a24d-4543-a6c6-9443d048cdb9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ba088727-0278-45aa-81c6-3f82a1bff846",
+                            ConcurrencyStamp = "6d5d60a9-fb02-47d9-ab18-09ffb3d139ad",
                             Email = "EventManagerOwner@yopmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             NormalizedEmail = "EVENTMANAGEROWNER@YOPMAIL.COM",
                             NormalizedUserName = "SERVICEDEFAULTOWNER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGIOE+75U/gx0OdCzYPi19fYQZUZao7vshDU74orMUYLNSgWOuYq0uGUzi9IyKbATQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAAF5esazgEiCx4nV7td01kJLXjIW/ksY1LcTYuLvxsyW/gdxJOrNYRm/NA/AlhKNQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "7bf5fc7a-c12b-4b0c-a33d-f81969c277e9",
+                            SecurityStamp = "c137550e-eb2d-4182-9c19-d98f612177ed",
                             TwoFactorEnabled = false,
                             UserName = "ServiceDefaultOwner"
                         });

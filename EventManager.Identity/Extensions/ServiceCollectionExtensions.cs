@@ -19,7 +19,7 @@ namespace EventManager.Identity.Extensions
 
         public static IdentityBuilder AddIdentityServices(this IServiceCollection services)=>services
               .AddScoped<IIdentityService, IdentityService>()
-              .AddIdentity<ApplicationUser, ApplicationUserRole>(DefaultSetupAction)
+              .AddIdentity<ApplicationUser, ApplicationRole>(DefaultSetupAction)
               .AddTokenProvider<ResetPasswordTokenProvider<ApplicationUser>>("ResetPassword")
                     .AddDefaultTokenProviders();
       

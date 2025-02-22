@@ -3,12 +3,13 @@ using EventManager.Identity.Models;
 using EventManager.SqlRepository.EntityConfigurations;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using System.Reflection;
 
 
 namespace EventManager.SqlRepository.Database;
 
-public sealed class AppDbContext : IdentityDbContext<ApplicationUser,ApplicationUserRole,string>
+public sealed class AppDbContext : IdentityDbContext<ApplicationUser,ApplicationRole,string>
 {
     public AppDbContext(DbContextOptions options) : base(options)
     {
@@ -18,8 +19,8 @@ public sealed class AppDbContext : IdentityDbContext<ApplicationUser,Application
     public DbSet<Cutsomer> Customers { get; set; }
     public DbSet<EventSubscription> EventSubscriptions { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
- 
 
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
