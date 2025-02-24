@@ -1,4 +1,5 @@
-﻿using EventManager.Domain.Exceptions;
+﻿using Azure;
+using EventManager.Domain.Exceptions;
 using EventManager.Domain.Models;
 using EventManager.Domain.Models.Enums;
 using EventManager.Domain.Queries;
@@ -44,35 +45,45 @@ internal sealed class EventRepository : IEventRepository
       return  await _appDbContext.Events.FindAsync(Id);
     }
 
-    public async Task<List<Event>> ListAsync(EventQueryFilter? filter)
+    public async Task<PagedResponse<Event>> ListAsync(EventQueryFilter filter)
     {
-        var query = _appDbContext.Events
-            .AsNoTracking()
+        var data = 
+            _appDbContext.Events.AsNoTracking()
+            .Skip((filter.page-1)*filter.pageSize)
+            .Take(filter.pageSize)
             .Where(q=>q.Status == EventStatus.Active)
             .AsQueryable();
+        var total = await _appDbContext.Events.CountAsync();
 
-        if (filter is not null)
-        {
             if (!string.IsNullOrEmpty(filter.Name))
-                query = query.Where(x => EF.Functions.Like(x.Name, $"%{filter.Name}%"));
+                data = data.Where(x => EF.Functions.Like(x.Name, $"%{filter.Name}%"));
 
             if (filter.StartDate is not null)
-                query = query.Where(x => x.StartDate == filter.StartDate);
+                data = data.Where(x => x.StartDate == filter.StartDate);
 
             if (filter.EndDate is not null)
-                query = query.Where(x => x.EndDate == filter.EndDate);
+                data = data.Where(x => x.EndDate == filter.EndDate);
 
             if (filter.Location is not null)
-                query = query.Where(x => EF.Functions.Like(x.Location, $"%{filter.Location}%"));
-        }
+                data = data.Where(x => EF.Functions.Like(x.Location, $"%{filter.Location}%"));
+        
+          var filteredData=   await data.ToListAsync();
 
-        return await query.ToListAsync();
+        var response = new PagedResponse<Event>
+        {
+            Data = filteredData,
+            Page = filter.page,
+            PageSize = filter.pageSize,
+            TotalItems = total,
+            TotalPages = (int)Math.Ceiling((double)total / filter.pageSize)
+        };
+
+        return response;
     }
 
 
     public async Task UpdateAsync(Event Event)
     {
-        //realurad ar mchirdeba ubralod Rom maxsovdes rom Arsebobs 
 
         _unitOfWork.Start();
         _appDbContext.Events.Attach(Event);

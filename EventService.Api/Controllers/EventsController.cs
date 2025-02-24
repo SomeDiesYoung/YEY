@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
+using EventService.Api.Models;
 
 namespace EventService.Api.Controllers;
 
@@ -47,10 +48,35 @@ public class EventsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<Event>>> ListAccount([FromQuery] EventQueryFilter? filter)
+    public async Task<ActionResult<List<Event>>> ListEvents([FromQuery] EventQueryFilter filter)
     {
         _logger.LogInformation("Applied filters :{@filter}",filter);
-        return await _eventRepository.ListAsync(filter);
+        if (filter.pageSize > 150)
+        {
+            throw new Exception("You can`t fetch that amount of items");
+        }
+
+        var pagedData = await _eventRepository.ListAsync(filter);
+
+        var response = new ApiPagedResponse<Event>
+        {
+            Data = pagedData.Data.ToList(),
+            Meta = new Meta()
+            {
+                Page = pagedData.Page,
+                PageSize = pagedData.PageSize,
+                TotalItems = pagedData.TotalItems,
+                TotalPages = pagedData.TotalPages
+            },
+            Links = new Links
+            {
+                Self = CreateLink(filter.page, filter.pageSize),
+                Next = filter.page >= pagedData.TotalPages ? null : CreateLink(filter.page + 1, filter.pageSize),
+                Prev = filter.page == 1 ? null : CreateLink(filter.page - 1, filter.pageSize)
+            }
+
+        };
+        return Ok(response);
     }
 
 
@@ -95,7 +121,14 @@ public class EventsController : ControllerBase
         return NoContent();
     }
 
-
+    private string? CreateLink(int page, int pageSize) =>
+        Url.Action(
+            action: "ListEvents",
+            controller: "Events",
+            values: new { page, pageSize },
+            protocol: Request.Scheme,
+            host: Request.Host.Value
+        );
 }
 
 

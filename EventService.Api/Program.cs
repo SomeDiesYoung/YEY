@@ -1,5 +1,6 @@
 using EventService.Api.Extensions;
 using EventService.Api.Middlewares;
+using Microsoft.AspNetCore.HttpOverrides;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +21,10 @@ builder.AddSwaggerDocumentation()
 
 
 
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor
+                               | ForwardedHeaders.XForwardedProto
+                               | ForwardedHeaders.XForwardedHost);
 
 var app = builder.Build();
 
